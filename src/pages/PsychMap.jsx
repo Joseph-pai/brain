@@ -19,13 +19,97 @@ const MOCK_DIARY = [
     { date: '2026.02.05', mood: '焦慮', icon: Frown, color: 'text-rose-500', score: 58, note: '項目進度受阻，壓力指數上升。建議去秘密花園聽放鬆音樂。' },
 ];
 
-const INDICATORS = [
-    { id: 'relaxation', label: '放鬆度', avg: 62, status: '良好' },
-    { id: 'focus', label: '專注度', avg: 74, status: '優秀' },
-    { id: 'fatigue', label: '疲勞度', avg: 42, status: '偏高' },
-    { id: 'stress', label: '壓力', avg: 28, status: '較低' },
-    { id: 'anxiety', label: '焦慮', avg: 48, status: '正常' },
-    { id: 'heart', label: '心率指標', avg: 71, status: '穩定' }
+const LATEST_REPORT = {
+    date: '2026.02.07 18:24',
+    displayDate: '最新檢測報告',
+    score: 68,
+    indicators: [
+        { id: 'relaxation', label: '放鬆度', avg: 62, status: '良好' },
+        { id: 'focus', label: '專注度', avg: 74, status: '優秀' },
+        { id: 'fatigue', label: '疲勞度', avg: 42, status: '偏高' },
+        { id: 'stress', label: '壓力', avg: 28, status: '較低' },
+        { id: 'anxiety', label: '焦慮', avg: 48, status: '正常' },
+        { id: 'heart', label: '心率指標', avg: 71, status: '穩定' }
+    ],
+    analysis: '根據您的 3 分鐘深度掃描，您的 專注度 表現優異，但 放鬆度 與 疲勞值 均顯示出明顯的系統負荷過重。建議您立即前往秘密花園進行 10 分鐘的深海冥想，以平衡您的腦諧度。'
+};
+
+const MOCK_HISTORY_DATA = [
+    {
+        id: 'hist_1',
+        date: '2026.02.06 14:30',
+        displayDate: '2026/02/06 測評報告',
+        score: 82,
+        indicators: [
+            { id: 'relaxation', label: '放鬆度', avg: 85, status: '優秀' },
+            { id: 'focus', label: '專注度', avg: 78, status: '良好' },
+            { id: 'fatigue', label: '疲勞度', avg: 20, status: '極低' },
+            { id: 'stress', label: '壓力', avg: 15, status: '極低' },
+            { id: 'anxiety', label: '焦慮', avg: 35, status: '正常' },
+            { id: 'heart', label: '心率指標', avg: 68, status: '穩定' }
+        ],
+        analysis: '昨天的各項指標非常理想，尤其是放鬆度和壓力控制達到了極佳狀態。大腦神經效能處於高位，適合進行創作性與高強度思維工作。'
+    },
+    {
+        id: 'hist_2',
+        date: '2026.02.05 10:15',
+        displayDate: '2026/02/05 測評報告',
+        score: 45,
+        indicators: [
+            { id: 'relaxation', label: '放鬆度', avg: 30, status: '較差' },
+            { id: 'focus', label: '專注度', avg: 40, status: '一般' },
+            { id: 'fatigue', label: '疲勞度', avg: 75, status: '极高' },
+            { id: 'stress', label: '壓力', avg: 80, status: '偏高' },
+            { id: 'anxiety', label: '焦慮', avg: 65, status: '較強' },
+            { id: 'heart', label: '心率指標', avg: 88, status: '較快' }
+        ],
+        analysis: '這是一份偏向警示的報告。數據顯示您當時處於高壓與極度疲勞狀態，心率指標也出現波動。這種情況下大腦處理效率會大幅下降，強烈建議休息。'
+    },
+    {
+        id: 'hist_3',
+        date: '2026.02.04 16:45',
+        displayDate: '2026/02/04 測評報告',
+        score: 72,
+        indicators: [
+            { id: 'relaxation', label: '放鬆度', avg: 65, status: '良好' },
+            { id: 'focus', label: '專注度', avg: 88, status: '優秀' },
+            { id: 'fatigue', label: '疲勞度', avg: 35, status: '正常' },
+            { id: 'stress', label: '壓力', avg: 42, status: '正常' },
+            { id: 'anxiety', label: '焦慮', avg: 40, status: '正常' },
+            { id: 'heart', label: '心率指標', avg: 72, status: '穩定' }
+        ],
+        analysis: '專注度表現極為突出，是典型的「心流」狀態預兆。雖然有輕微疲勞，但整體心理素質非常穩定，工作進展應該相當順利。'
+    },
+    {
+        id: 'hist_4',
+        date: '2026.02.03 09:00',
+        displayDate: '2026/02/03 測評報告',
+        score: 58,
+        indicators: [
+            { id: 'relaxation', label: '放鬆度', avg: 45, status: '一般' },
+            { id: 'focus', label: '專注度', avg: 60, status: '良好' },
+            { id: 'fatigue', label: '疲勞度', avg: 52, status: '偏高' },
+            { id: 'stress', label: '壓力', avg: 55, status: '中等' },
+            { id: 'anxiety', label: '焦慮', avg: 50, status: '中等' },
+            { id: 'heart', label: '心率指標', avg: 75, status: '穩定' }
+        ],
+        analysis: '早起後的檢測顯示狀態尚可，但動力感並非處於峰值。建議在開始重頭工作前進行簡單的深呼吸練習，以進一步提升喚醒度。'
+    },
+    {
+        id: 'hist_5',
+        date: '2026.02.02 21:20',
+        displayDate: '2026/02/02 測評報告',
+        score: 80,
+        indicators: [
+            { id: 'relaxation', label: '放鬆度', avg: 92, status: '極佳' },
+            { id: 'focus', label: '專注度', avg: 35, status: '較低' },
+            { id: 'fatigue', label: '疲勞度', avg: 15, status: '極低' },
+            { id: 'stress', label: '壓力', avg: 10, status: '極低' },
+            { id: 'anxiety', label: '焦慮', avg: 20, status: '平和' },
+            { id: 'heart', label: '心率指標', avg: 62, status: '平穩' }
+        ],
+        analysis: '晚間睡前的數據顯示您已完全放鬆。Alpha 波活動旺盛，這對進入深度睡眠非常有幫助。保持這種心境，明早醒來會更有活力。'
+    }
 ];
 
 const subModules = [
@@ -37,11 +121,12 @@ const subModules = [
 
 export default function PsychMap() {
     const [activeModule, setActiveModule] = useState(null);
+    const [selectedReportId, setSelectedReportId] = useState(null);
 
-    const renderHeader = (title, Icon) => (
+    const renderHeader = (title, Icon, onBack = null) => (
         <div className="flex items-center justify-between mb-8">
             <button
-                onClick={() => setActiveModule(null)}
+                onClick={onBack || (() => { setActiveModule(null); setSelectedReportId(null); })}
                 className="p-3 bg-white shadow-xl shadow-slate-200 rounded-2xl text-slate-400 hover:text-blue-600 transition-colors"
             >
                 <ChevronLeft size={24} />
@@ -210,11 +295,20 @@ export default function PsychMap() {
         </div>
     );
 
-    const renderLatestReport = () => (
+    const renderReportDetail = (report) => (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-            {renderHeader('最新檢測報告', FileText)}
+            {renderHeader(report.displayDate, FileText, () => {
+                if (activeModule === 'history') {
+                    setSelectedReportId(null);
+                } else {
+                    setActiveModule(null);
+                }
+            })}
 
-            <div className="bg-gradient-to-br from-[#1e1b4b] to-[#312e81] p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl overflow-hidden relative">
+            <div className={`bg-gradient-to-br p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl overflow-hidden relative ${report.score >= 80 ? 'from-[#064e3b] to-[#065f46]' :
+                    report.score >= 60 ? 'from-[#1e1b4b] to-[#312e81]' :
+                        'from-[#7f1d1d] to-[#991b1b]'
+                }`}>
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                     <div className="absolute top-0 left-0 w-64 h-64 bg-blue-400 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-600 rounded-full blur-3xl" />
@@ -225,12 +319,12 @@ export default function PsychMap() {
                         <span className="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                             <ShieldCheck size={14} className="text-blue-400" /> 認證數據
                         </span>
-                        <span className="text-blue-200 text-xs font-bold font-mono">2026.02.07 18:24</span>
+                        <span className="text-blue-200 text-xs font-bold font-mono">{report.date}</span>
                     </div>
                 </div>
                 <div className="relative flex flex-col items-center z-10">
                     <div className="w-32 h-32 rounded-full border-[10px] border-white/10 flex items-center justify-center">
-                        <span className="text-5xl font-black">68</span>
+                        <span className="text-5xl font-black">{report.score}</span>
                     </div>
                 </div>
             </div>
@@ -241,10 +335,10 @@ export default function PsychMap() {
                     <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">多維度雷達分析</h3>
                     <div className="w-full h-80">
                         <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={INDICATORS.map(ind => ({ subject: ind.label, A: ind.avg }))}>
+                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={report.indicators.map(ind => ({ subject: ind.label, A: ind.avg }))}>
                                 <PolarGrid stroke="#e2e8f0" />
                                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
-                                <Radar name="最新測評" dataKey="A" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
+                                <Radar name="測評結果" dataKey="A" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
                             </RadarChart>
                         </ResponsiveContainer>
                     </div>
@@ -252,9 +346,9 @@ export default function PsychMap() {
 
                 {/* 6 Indicators Grid */}
                 <div className="grid grid-cols-2 gap-4">
-                    {INDICATORS.map((ind, i) => (
+                    {report.indicators.map((ind, i) => (
                         <div key={i} className="glass-card p-6 border-2 border-slate-50 flex flex-col items-center justify-center text-center">
-                            <span className="text-3xl font-black text-blue-600">{ind.avg}</span>
+                            <span className={`text-3xl font-black ${ind.avg >= 70 ? 'text-emerald-600' : ind.avg >= 40 ? 'text-blue-600' : 'text-rose-600'}`}>{ind.avg}</span>
                             <span className="text-xs font-black text-slate-800 mt-1">{ind.label}</span>
                             <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-2 px-2 py-0.5 bg-slate-100 rounded-md">{ind.status}</span>
                         </div>
@@ -265,32 +359,35 @@ export default function PsychMap() {
             <div className="glass-card p-10 bg-blue-50/50 space-y-4">
                 <h4 className="font-black text-xl text-slate-800 flex items-center gap-2 italic"><Brain size={24} className="text-blue-600" /> 趨勢深度分析</h4>
                 <p className="text-slate-600 font-medium leading-relaxed uppercase">
-                    您的專注度指標處於歷史高位（74），表明認知效率極佳。但疲勞度顯示有累積跡象，建議調整工作節律。
+                    {report.analysis}
                 </p>
             </div>
         </div>
     );
 
-    const renderHistory = () => (
+    const renderHistoryList = () => (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             {renderHeader('歷史報告列表', History)}
             <div className="space-y-4">
-                {[1, 2, 3, 4, 5].map(i => (
+                {MOCK_HISTORY_DATA.map((item, i) => (
                     <motion.div
                         whileHover={{ x: 10 }}
-                        key={i}
+                        key={item.id}
                         className="glass-card p-8 flex items-center justify-between group cursor-pointer border-2 border-transparent hover:border-blue-100 transition-all shadow-xl shadow-slate-100/50"
-                        onClick={() => setActiveModule('latest')}
+                        onClick={() => setSelectedReportId(item.id)}
                     >
                         <div className="flex items-center gap-6">
                             <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
                                 <FileText size={24} />
                             </div>
                             <div>
-                                <h4 className="font-black text-slate-800 text-lg">2026.02.{10 - i} 測評報告</h4>
+                                <h4 className="font-black text-slate-800 text-lg">{item.date.split(' ')[0]} 測評報告</h4>
                                 <div className="flex items-center gap-3 mt-1">
-                                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg">綜合得分: {85 - i * 5}</span>
-                                    <span className="text-[10px] font-black text-slate-300 uppercase italic">ID: 0x9f32b{i}</span>
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${item.score >= 80 ? 'text-emerald-600 bg-emerald-50' :
+                                            item.score >= 60 ? 'text-blue-600 bg-blue-50' :
+                                                'text-rose-600 bg-rose-50'
+                                        }`}>綜合得分: {item.score}</span>
+                                    <span className="text-[10px] font-black text-slate-300 uppercase italic">ID: 0x{item.id}</span>
                                 </div>
                             </div>
                         </div>
@@ -306,8 +403,12 @@ export default function PsychMap() {
             {!activeModule && renderPortal()}
             {activeModule === 'calendar' && renderCalendar()}
             {activeModule === 'diary' && renderDiary()}
-            {activeModule === 'latest' && renderLatestReport()}
-            {activeModule === 'history' && renderHistory()}
+            {activeModule === 'latest' && renderReportDetail(LATEST_REPORT)}
+            {activeModule === 'history' && (
+                selectedReportId
+                    ? renderReportDetail(MOCK_HISTORY_DATA.find(r => r.id === selectedReportId))
+                    : renderHistoryList()
+            )}
         </div>
     );
 }
