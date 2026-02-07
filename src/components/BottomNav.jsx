@@ -3,11 +3,11 @@ import { NavLink } from 'react-router-dom';
 import { Home, Link as LinkIcon, Map, Brain, User, ShoppingCart } from 'lucide-react';
 
 const navItems = [
-    { path: '/', label: '首頁', icon: Home, color: 'bg-blue-600' },
-    { path: '/test', label: '連接腦機', icon: LinkIcon, color: 'bg-indigo-600' },
+    { path: '/', label: '首頁', icon: Home, color: 'bg-orange-600' },
+    { path: '/test', label: '連接腦機', icon: LinkIcon, color: 'bg-red-900' },
     { path: '/garden', label: '秘密花園', icon: Brain, color: 'bg-purple-600' },
-    { path: '/map', label: '心理地圖', icon: Map, color: 'bg-emerald-600' },
-    { path: '/mall', label: '專業方案', icon: ShoppingCart, color: 'bg-slate-700' },
+    { path: '/map', label: '心理地圖', icon: Map, color: 'bg-teal-600' },
+    { path: '/mall', label: '健康商城', icon: ShoppingCart, color: 'bg-red-950' },
 ];
 
 export default function BottomNav() {
@@ -25,11 +25,11 @@ export default function BottomNav() {
                     >
                         {({ isActive }) => (
                             <>
-                                <div className={`p-2.5 rounded-2xl transition-all duration-500 ${isActive ? `${color} text-white shadow-lg shadow-blue-100 rotate-6` : 'text-slate-400'
+                                <div className={`p-2.5 rounded-2xl transition-all duration-500 ${isActive ? `${color} text-white shadow-lg shadow-orange-100 rotate-6` : 'text-slate-400'
                                     }`}>
                                     <Icon size={24} strokeWidth={isActive ? 3 : 2} />
                                 </div>
-                                <span className={`text-[9px] font-black uppercase tracking-widest mt-1.5 truncate ${isActive ? 'text-slate-800' : 'text-slate-400'
+                                <span className={`text-[9px] font-black uppercase tracking-widest mt-1.5 truncate ${isActive ? 'text-red-950' : 'text-slate-400'
                                     }`}>
                                     {label}
                                 </span>

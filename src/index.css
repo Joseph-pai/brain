@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-blue: #3B82F6;
+  --color-primary-orange: #F97316;
+  --color-primary-deep-red: #450A0A;
   --color-secondary-green: #10B981;
   --color-accent-purple: #8B5CF6;
 
   /* Brainwave Specific Colors - Professional & Balanced */
-  --color-wave-delta: #1E1B4B;
-  /* Deep Night - Sleep */
+  --color-wave-delta: #450A0A;
+  /* Deep Red - Sleep */
   --color-wave-theta: #F59E0B;
   /* Amber - Creative */
-  --color-wave-alpha: #10B981;
-  /* Emerald - Relaxed */
-  --color-wave-beta: #3B82F6;
-  /* Electric Blue - Alert */
-  --color-wave-gamma: #8B5CF6;
-  /* Royal Purple - Insight */
+  --color-wave-alpha: #F97316;
+  /* Orange - Relaxed */
+  --color-wave-beta: #EA580C;
+  /* Darker Orange - Alert */
+  --color-wave-gamma: #7F1D1D;
+  /* Maroon - Insight */
   --color-wave-stress: #FB7185;
   /* Rose - Warning */
 

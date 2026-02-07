@@ -21,7 +21,7 @@ const plans = [
         name: '專業冥想版',
         price: '¥ 99 / 月',
         features: ['解鎖秘密花園全內容', '詳細健康趨勢分析', '個人化調節建議'],
-        color: 'bg-blue-600 text-white',
+        color: 'bg-orange-600 text-white',
         highlight: true
     },
     {
@@ -29,7 +29,7 @@ const plans = [
         name: '旗艦醫療版',
         price: '¥ 199 / 月',
         features: ['意念拔河完整版', '數據加密備份', '專家諮詢 (2次/月)'],
-        color: 'bg-slate-900 text-white'
+        color: 'bg-red-950 text-white'
     }
 ];
 
@@ -42,22 +42,22 @@ export default function HealthMall() {
         <div className="space-y-12 pb-32 max-w-7xl mx-auto px-2">
 
             {/* Hero Section */}
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-12 sm:p-20 rounded-[3rem] text-center space-y-6 shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-red-900 to-red-950 p-12 sm:p-20 rounded-[3rem] text-center space-y-6 shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
-                    <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-blue-500 rounded-full blur-[100px]" />
-                    <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-500 rounded-full blur-[100px]" />
+                    <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-orange-500 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-red-600 rounded-full blur-[100px]" />
                 </div>
 
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="inline-flex items-center gap-3 px-6 py-2 bg-blue-500/20 text-blue-400 rounded-full text-xs font-black uppercase tracking-[0.2em] italic border border-blue-500/30"
+                    className="inline-flex items-center gap-3 px-6 py-2 bg-orange-500/20 text-orange-400 rounded-full text-xs font-black uppercase tracking-[0.2em] italic border border-orange-500/30"
                 >
                     <Crown size={16} /> Premium Health Marketplace
                 </motion.div>
 
-                <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">身心健康商城</h1>
-                <p className="text-slate-400 font-medium max-w-2xl mx-auto text-sm sm:text-lg">
+                <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">健康商城</h1>
+                <p className="text-slate-300 font-medium max-w-2xl mx-auto text-sm sm:text-lg">
                     探索前沿大腦科技產品與專業心理調節課程。
                 </p>
             </div>
@@ -68,22 +68,22 @@ export default function HealthMall() {
                     <motion.div
                         key={plan.id}
                         whileHover={{ scale: 1.02 }}
-                        className={`relative rounded-[2.5rem] p-10 space-y-6 shadow-xl ${plan.highlight ? 'bg-white border-2 border-blue-500/10 ring-4 ring-blue-500/5' : 'bg-slate-50/50'
+                        className={`relative rounded-[2.5rem] p-10 space-y-6 shadow-xl ${plan.highlight ? 'bg-white border-2 border-orange-500/10 ring-4 ring-orange-500/5' : 'bg-slate-50/50'
                             }`}
                     >
                         <div className="flex justify-between items-start">
-                            <h3 className="text-2xl font-black text-slate-800">{plan.name}</h3>
-                            <span className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-xl uppercase">會員專享</span>
+                            <h3 className="text-2xl font-black text-red-950">{plan.name}</h3>
+                            <span className="px-4 py-1.5 bg-orange-600 text-white text-[10px] font-black rounded-xl uppercase">會員專享</span>
                         </div>
-                        <p className="text-3xl font-black text-slate-900">{plan.price}</p>
+                        <p className="text-3xl font-black text-red-950">{plan.price}</p>
                         <div className="space-y-3">
                             {plan.features.map((f, i) => (
                                 <div key={i} className="flex items-center gap-3 text-sm font-bold text-slate-500">
-                                    <CheckCircle2 size={16} className="text-blue-500" /> {f}
+                                    <CheckCircle2 size={16} className="text-orange-500" /> {f}
                                 </div>
                             ))}
                         </div>
-                        <button className={`w-full py-5 rounded-2xl font-black transition-all ${plan.highlight ? 'bg-blue-600 text-white shadow-xl shadow-blue-200' : 'bg-slate-900 text-white'
+                        <button className={`w-full py-5 rounded-2xl font-black transition-all ${plan.highlight ? 'bg-orange-600 text-white shadow-xl shadow-orange-200' : 'bg-red-950 text-white'
                             }`}>立即升級</button>
                     </motion.div>
                 ))}
@@ -93,7 +93,7 @@ export default function HealthMall() {
             <div className="px-4 space-y-10">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="space-y-1 text-center md:text-left">
-                        <h2 className="text-3xl font-black text-slate-800 italic">精選商品 & 課程</h2>
+                        <h2 className="text-3xl font-black text-red-950 italic">精選商品 & 課程</h2>
                         <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Marketplace Collection</p>
                     </div>
 
@@ -102,7 +102,7 @@ export default function HealthMall() {
                             <button
                                 key={cat}
                                 onClick={() => setFilter(cat)}
-                                className={`px-6 py-2.5 rounded-xl transition-all ${filter === cat ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                                className={`px-6 py-2.5 rounded-xl transition-all ${filter === cat ? 'bg-white text-orange-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
                                     }`}
                             >
                                 {cat}
@@ -121,21 +121,21 @@ export default function HealthMall() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 whileHover={{ y: -10 }}
-                                className="group glass-card p-6 flex flex-col space-y-4 cursor-pointer hover:border-blue-500/20 transition-all border-2 border-transparent"
+                                className="group glass-card p-6 flex flex-col space-y-4 cursor-pointer hover:border-orange-500/20 transition-all border-2 border-transparent"
                             >
-                                <div className="relative aspect-square bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-300 group-hover:text-blue-600 transition-colors overflow-hidden">
+                                <div className="relative aspect-square bg-slate-50 rounded-[2rem] flex items-center justify-center text-slate-300 group-hover:text-orange-600 transition-colors overflow-hidden">
                                     <item.icon size={64} strokeWidth={1.5} />
                                     <span className="absolute top-4 left-4 px-3 py-1 bg-white/80 backdrop-blur-md rounded-lg text-[9px] font-black uppercase text-slate-500 tracking-widest">
                                         {item.category}
                                     </span>
                                 </div>
                                 <div className="space-y-1">
-                                    <h4 className="font-black text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-1">{item.name}</h4>
+                                    <h4 className="font-black text-red-950 group-hover:text-orange-600 transition-colors line-clamp-1">{item.name}</h4>
                                     <p className="text-[10px] text-slate-400 font-bold italic line-clamp-1 uppercase">{item.sub}</p>
                                 </div>
                                 <div className="flex items-center justify-between pt-2">
-                                    <span className="text-blue-600 font-black text-lg">{item.price}</span>
-                                    <button className="p-2.5 bg-slate-900 text-white rounded-xl hover:bg-blue-600 transition-colors">
+                                    <span className="text-orange-600 font-black text-lg">{item.price}</span>
+                                    <button className="p-2.5 bg-red-950 text-white rounded-xl hover:bg-orange-600 transition-colors">
                                         <ShoppingCart size={18} />
                                     </button>
                                 </div>

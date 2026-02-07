@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
 const tabs = [
-    { id: 'music', label: '音樂', icon: Music, color: 'text-pink-500', bg: 'bg-pink-50' },
+    { id: 'music', label: '音樂', icon: Music, color: 'text-orange-500', bg: 'bg-orange-50' },
     { id: 'games', label: '遊戲', icon: Gamepad, color: 'text-purple-500', bg: 'bg-purple-50' },
-    { id: 'audio', label: '有聲書', icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { id: 'video', label: '影片', icon: Video, color: 'text-red-500', bg: 'bg-red-50' },
+    { id: 'audio', label: '有聲書', icon: BookOpen, color: 'text-red-500', bg: 'bg-red-50' },
+    { id: 'video', label: '影片', icon: Video, color: 'text-rose-500', bg: 'bg-rose-50' },
 ];
 
 const CONTENT_LIBRARY = {
@@ -68,7 +68,7 @@ export default function SecretGarden() {
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 50 }}
-                        className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 font-black"
+                        className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-orange-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 font-black"
                     >
                         <Zap size={20} className="text-amber-400 animate-pulse" />
                         正在為您開啟：{operatingItem} ...
@@ -78,11 +78,11 @@ export default function SecretGarden() {
 
             {/* Header */}
             <div className="flex items-center gap-6 px-4">
-                <div className="p-4 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-[2rem] shadow-xl shadow-pink-100 italic">
+                <div className="p-4 bg-gradient-to-br from-red-900 to-red-950 text-white rounded-[2rem] shadow-xl shadow-red-100 italic">
                     <Brain size={40} />
                 </div>
                 <div className="space-y-1">
-                    <h1 className="text-4xl font-black text-slate-800 tracking-tight">秘密調節花園</h1>
+                    <h1 className="text-4xl font-black text-red-950 tracking-tight">秘密調節花園</h1>
                     <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Psychological Regulation Hub</p>
                 </div>
             </div>
@@ -94,7 +94,7 @@ export default function SecretGarden() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="bg-blue-600 rounded-[2rem] p-6 text-white flex items-center justify-between shadow-xl shadow-blue-100"
+                        className="bg-orange-600 rounded-[2rem] p-6 text-white flex items-center justify-between shadow-xl shadow-orange-100"
                     >
                         <div className="flex items-center gap-4">
                             <div className="p-2 bg-white/20 rounded-xl">
@@ -102,7 +102,7 @@ export default function SecretGarden() {
                             </div>
                             <div>
                                 <h4 className="font-black">推薦模式：{MODE_LABELS[mode] || mode}</h4>
-                                <p className="text-xs text-blue-100 font-bold">已根據您的測評結果自動過濾內容</p>
+                                <p className="text-xs text-orange-100 font-bold">已根據您的測評結果自動過濾內容</p>
                             </div>
                         </div>
                         <button onClick={() => setMode(null)} className="text-xs underline font-bold opacity-60 hover:opacity-100">清除建議</button>
@@ -135,7 +135,7 @@ export default function SecretGarden() {
                 className="glass-card p-10 min-h-[500px] border-4 border-white shadow-2xl shadow-slate-200"
             >
                 <div className="flex items-center justify-between mb-12">
-                    <h2 className="text-3xl font-black text-slate-800">
+                    <h2 className="text-3xl font-black text-red-950">
                         {tabs.find(t => t.id === activeTab).label}精選內容
                     </h2>
                     <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 tracking-widest uppercase italic">
@@ -149,19 +149,19 @@ export default function SecretGarden() {
                             key={i}
                             whileHover={{ y: -5 }}
                             onClick={() => handleItemClick(item)}
-                            className={`p-8 rounded-[2.5rem] flex items-center justify-between group transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-blue-200 ${operatingItem === item.name ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-50/50 hover:bg-blue-600'
+                            className={`p-8 rounded-[2.5rem] flex items-center justify-between group transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-orange-200 ${operatingItem === item.name ? 'bg-orange-600 ring-4 ring-orange-100' : 'bg-slate-50/50 hover:bg-orange-600'
                                 }`}
                         >
                             <div className="flex items-center gap-6">
-                                <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-300 group-hover:text-blue-600 transition-colors shadow-sm relative overflow-hidden">
+                                <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-300 group-hover:text-orange-600 transition-colors shadow-sm relative overflow-hidden">
                                     {item.icon ? <item.icon size={32} /> : <Play size={32} fill="currentColor" />}
-                                    <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-colors" />
+                                    <div className="absolute inset-0 bg-orange-600/0 group-hover:bg-orange-600/5 transition-colors" />
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className={`text-xl font-black transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-700 group-hover:text-white'}`}>
+                                    <h3 className={`text-xl font-black transition-colors ${operatingItem === item.name ? 'text-white' : 'text-red-950 group-hover:text-white'}`}>
                                         {operatingItem === item.name ? '啟動中...' : item.name}
                                     </h3>
-                                    <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${operatingItem === item.name ? 'text-blue-100' : 'text-slate-400 group-hover:text-blue-100'}`}>
+                                    <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${operatingItem === item.name ? 'text-orange-100' : 'text-slate-400 group-hover:text-orange-100'}`}>
                                         {item.sub}
                                     </p>
                                 </div>
@@ -178,8 +178,8 @@ export default function SecretGarden() {
                 </div>
             </motion.div>
 
-            <footer className="text-center pb-8">
-                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em]">Secret Garden Intelligence</p>
+            <footer className="text-center pb-8 pt-8">
+                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] text-red-950/20">Secret Garden Intelligence</p>
             </footer>
         </div>
     );
