@@ -7,7 +7,7 @@ const navItems = [
     { path: '/test', label: '連接腦機', icon: LinkIcon, color: 'bg-indigo-600' },
     { path: '/garden', label: '秘密花園', icon: Brain, color: 'bg-purple-600' },
     { path: '/map', label: '心理地圖', icon: Map, color: 'bg-emerald-600' },
-    { path: '/mall', label: '健康商城', icon: ShoppingCart, color: 'bg-slate-700' },
+    { path: '/mall', label: '健康商城', icon: ShoppingCart, color: 'bg-red-800' },
 ];
 
 export default function BottomNav() {

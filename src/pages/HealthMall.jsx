@@ -29,7 +29,7 @@ const plans = [
         name: '旗艦醫療版',
         price: '¥ 199 / 月',
         features: ['意念拔河完整版', '數據加密備份', '專家諮詢 (2次/月)'],
-        color: 'bg-red-950 text-white'
+        color: 'bg-red-800 text-white'
     }
 ];
 
@@ -42,7 +42,7 @@ export default function HealthMall() {
         <div className="space-y-12 pb-32 max-w-7xl mx-auto px-2">
 
             {/* Hero Section */}
-            <div className="bg-gradient-to-br from-red-900 to-red-950 p-12 sm:p-20 rounded-[3rem] text-center space-y-6 shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-red-800 to-red-900 p-12 sm:p-20 rounded-[3rem] text-center space-y-6 shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                     <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-orange-500 rounded-full blur-[100px]" />
                     <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-red-600 rounded-full blur-[100px]" />
@@ -72,7 +72,7 @@ export default function HealthMall() {
                             }`}
                     >
                         <div className="flex justify-between items-start">
-                            <h3 className="text-2xl font-black text-red-950">{plan.name}</h3>
+                            <h3 className="text-2xl font-black text-red-900">{plan.name}</h3>
                             <span className="px-4 py-1.5 bg-orange-600 text-white text-[10px] font-black rounded-xl uppercase">會員專享</span>
                         </div>
                         <p className="text-3xl font-black text-red-950">{plan.price}</p>
@@ -83,7 +83,7 @@ export default function HealthMall() {
                                 </div>
                             ))}
                         </div>
-                        <button className={`w-full py-5 rounded-2xl font-black transition-all ${plan.highlight ? 'bg-orange-600 text-white shadow-xl shadow-orange-200' : 'bg-red-950 text-white'
+                        <button className={`w-full py-5 rounded-2xl font-black transition-all ${plan.highlight ? 'bg-orange-600 text-white shadow-xl shadow-orange-200' : 'bg-red-900 text-white'
                             }`}>立即升級</button>
                     </motion.div>
                 ))}
@@ -93,7 +93,7 @@ export default function HealthMall() {
             <div className="px-4 space-y-10">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="space-y-1 text-center md:text-left">
-                        <h2 className="text-3xl font-black text-red-950 italic">精選商品 & 課程</h2>
+                        <h2 className="text-3xl font-black text-red-900 italic">精選商品 & 課程</h2>
                         <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Marketplace Collection</p>
                     </div>
 
@@ -130,12 +130,12 @@ export default function HealthMall() {
                                     </span>
                                 </div>
                                 <div className="space-y-1">
-                                    <h4 className="font-black text-red-950 group-hover:text-orange-600 transition-colors line-clamp-1">{item.name}</h4>
+                                    <h4 className="font-black text-red-900 group-hover:text-orange-600 transition-colors line-clamp-1">{item.name}</h4>
                                     <p className="text-[10px] text-slate-400 font-bold italic line-clamp-1 uppercase">{item.sub}</p>
                                 </div>
                                 <div className="flex items-center justify-between pt-2">
                                     <span className="text-orange-600 font-black text-lg">{item.price}</span>
-                                    <button className="p-2.5 bg-red-950 text-white rounded-xl hover:bg-orange-600 transition-colors">
+                                    <button className="p-2.5 bg-red-900 text-white rounded-xl hover:bg-orange-600 transition-colors">
                                         <ShoppingCart size={18} />
                                     </button>
                                 </div>
