@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Music, Gamepad, MessageSquare, Video, Play, Pause, SkipForward, SkipBack, Plus, Trash2, CheckCircle2, XCircle, ChevronLeft, Volume2, Search, Palmtree, Headphones, Rocket, Mic2, Clapperboard, Check, X, Upload } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Music, Gamepad, MessageSquare, Video, Play, Pause, SkipForward, SkipBack, Plus, Trash2, CheckCircle2, XCircle, ChevronLeft, Volume2, Search, Palmtree, Headphones, Rocket, Mic2, Clapperboard, Check, X, Upload, Edit2, GripVertical } from 'lucide-react';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 
 const EDEN_THEMES = [
     { id: 'music', title: '音樂調節', sub: '腦波同步音療', icon: Headphones, color: 'from-blue-500 to-indigo-600' },
@@ -19,16 +18,18 @@ export default function SecretGarden() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
     const [bgIndex, setBgIndex] = useState(0);
+    const [editingTrack, setEditingTrack] = useState(null);
+    const [editName, setEditName] = useState('');
 
     const audioRef = useRef(null);
     const fileInputRef = useRef(null);
 
     const colors = [
-        'bg-blue-100/30',
-        'bg-emerald-100/30',
-        'bg-purple-100/30',
-        'bg-amber-100/30',
-        'bg-rose-100/30'
+        'bg-blue-400/20',
+        'bg-emerald-400/20',
+        'bg-purple-400/20',
+        'bg-amber-400/20',
+        'bg-rose-400/20'
     ];
 
     // Dynamic background color effect during playback
@@ -102,17 +103,13 @@ export default function SecretGarden() {
         }
     };
 
-    const playTrack = (track) => {
-        if (isSelecting) {
-            toggleSelect(track.id);
-            return;
+    const saveTrackName = () => {
+        if (!editingTrack) return;
+        setMusicList(prev => prev.map(t => t.id === editingTrack.id ? { ...t, name: editName } : t));
+        if (currentTrack?.id === editingTrack.id) {
+            setCurrentTrack(prev => ({ ...prev, name: editName }));
         }
-        if (currentTrack?.id === track.id) {
-            setIsPlaying(!isPlaying);
-        } else {
-            setCurrentTrack(track);
-            setIsPlaying(true);
-        }
+        setEditingTrack(null);
     };
 
     const renderPortal = () => (
@@ -294,19 +291,44 @@ export default function SecretGarden() {
 
     return (
         <div className="min-h-screen relative overflow-hidden pb-32 max-w-6xl mx-auto px-2 pt-6">
-            {/* Real Dynamic Background System */}
-            <div className="fixed inset-0 pointer-events-none transition-colors duration-[4000ms] bg-slate-50">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={bgIndex}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 3 }}
-                        className={`absolute inset-0 ${colors[bgIndex]}`}
-                    />
+            {/* Real Dynamic Background System - More Visible Blobs */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                <AnimatePresence>
+                    {isPlaying && (
+                        <>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{
+                                    opacity: 1,
+                                    scale: [1, 1.2, 1],
+                                    x: [0, 50, -50, 0],
+                                    y: [0, -30, 30, 0]
+                                }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                                className={`absolute -top-20 -left-20 w-96 h-96 rounded-full blur-[100px] ${colors[bgIndex]}`}
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{
+                                    opacity: 1,
+                                    scale: [1.2, 1, 1.2],
+                                    x: [0, -70, 70, 0],
+                                    y: [0, 50, -50, 0]
+                                }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                                className={`absolute -bottom-20 -right-20 w-[30rem] h-[30rem] rounded-full blur-[120px] ${colors[(bgIndex + 1) % colors.length]}`}
+                            />
+                            <motion.div
+                                animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                transition={{ duration: 5, repeat: Infinity }}
+                                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] rounded-full blur-[150px] ${colors[(bgIndex + 2) % colors.length]}`}
+                            />
+                        </>
+                    )}
                 </AnimatePresence>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/50" />
+                <div className="absolute inset-0 bg-white/20 backdrop-blur-3xl" />
             </div>
 
             <div className="relative z-10">
