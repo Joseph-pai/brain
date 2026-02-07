@@ -4,11 +4,60 @@
   --color-primary-blue: #3B82F6;
   --color-secondary-green: #10B981;
   --color-accent-purple: #8B5CF6;
-  --font-family-body: 'Inter', system-ui, sans-serif;
+
+  /* Brainwave Specific Colors - Professional & Balanced */
+  --color-wave-delta: #1E1B4B;
+  /* Deep Night - Sleep */
+  --color-wave-theta: #F59E0B;
+  /* Amber - Creative */
+  --color-wave-alpha: #10B981;
+  /* Emerald - Relaxed */
+  --color-wave-beta: #3B82F6;
+  /* Electric Blue - Alert */
+  --color-wave-gamma: #8B5CF6;
+  /* Royal Purple - Insight */
+  --color-wave-stress: #FB7185;
+  /* Rose - Warning */
+
+  --font-family-body: 'Outfit', 'Inter', system-ui, sans-serif;
 }
 
-body {
-  font-family: var(--font-family-body);
-  background: linear-gradient(to bottom right, #f3f4f6, #eff6ff);
-  @apply text-slate-800 antialiased min-h-screen;
+@layer base {
+  body {
+    font-family: var(--font-family-body);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    @apply text-slate-900 antialiased min-h-screen;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-xl rounded-2xl;
+  }
+
+  .wave-pulse {
+    animation: wave-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes wave-pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+  }
+}
+
+/* Ensure mobile rotation support */
+@media (orientation: landscape) and (max-height: 500px) {
+  .lg\:pb-0 {
+    padding-bottom: 0 !important;
+  }
 }
