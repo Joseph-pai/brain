@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bluetooth, Activity, ShieldCheck, Timer, Zap, Brain, Sliders, Battery, Signal, ChevronRight, X } from 'lucide-react';
+import { Bluetooth, Activity, ShieldCheck, Timer, Zap, Brain, Sliders, Battery, Signal, ChevronRight, X, Heart, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, Radar as RadarComponent, Tooltip } from 'recharts';
 import { generateWaveformData } from '../utils/mockData';
@@ -56,13 +56,17 @@ export default function Test() {
     const [spectrum, setSpectrum] = useState(generateSpectrum());
     const [activeWave, setActiveWave] = useState('delta');
     const [timer, setTimer] = useState(1800); // 180.0 seconds (3 minutes)
+
+    // Split into Positive and Negative groups
     const [stats, setStats] = useState([
-        { label: '放鬆度', val: 56, id: 'relaxation' },
-        { label: '專注度', val: 69, id: 'focus' },
-        { label: '疲勞度', val: 37, id: 'fatigue' },
-        { label: '壓力指數', val: 48, id: 'stress' },
-        { label: '焦慮指數', val: 38, id: 'anxiety' },
-        { label: '心率指標', val: 71, id: 'heart' }
+        // Group 1: Positive (Higher is Better, Alert < 50)
+        { label: '放鬆度', val: 56, id: 'relaxation', group: 'pos' },
+        { label: '專注度', val: 69, id: 'focus', group: 'pos' },
+        { label: '心流指標', val: 71, id: 'flow', group: 'pos' },
+        // Group 2: Negative (Lower is Better, Alert > 50)
+        { label: '疲勞度', val: 37, id: 'fatigue', group: 'neg' },
+        { label: '壓力指數', val: 48, id: 'stress', group: 'neg' },
+        { label: '焦慮指數', val: 38, id: 'anxiety', group: 'neg' }
     ]);
 
     useEffect(() => {
@@ -84,12 +88,7 @@ export default function Test() {
                     return [...prev.slice(1), latestPoint];
                 });
 
-                // Update spectrum based on latest simulation values to ensure synchronicity
-                setSpectrum(prev => {
-                    // Since setRawSignal hasn't finished, we simulate the logic here or wait for next tick
-                    // Better to use the latestPoint generated above
-                    return generateSpectrum(latestPoint);
-                });
+                setSpectrum(prev => generateSpectrum(latestPoint));
 
                 setTimer(t => {
                     if (t <= 1) {
@@ -102,7 +101,7 @@ export default function Test() {
 
                 setStats(prev => prev.map(s => ({
                     ...s,
-                    val: Math.max(10, Math.min(100, s.val + (Math.random() > 0.5 ? 1 : -1)))
+                    val: Math.max(10, Math.min(100, s.val + (Math.random() > 0.5 ? 2 : -2)))
                 })));
             }, 100);
         }
@@ -116,8 +115,14 @@ export default function Test() {
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleIndicatorClick = (val, path = '/garden') => {
-        if (val < 50) {
+    const isAlert = (stat) => {
+        if (stat.group === 'pos') return stat.val < 50;
+        if (stat.group === 'neg') return stat.val > 50;
+        return false;
+    };
+
+    const handleIndicatorClick = (stat, path = '/garden') => {
+        if (isAlert(stat)) {
             navigate(path);
         }
     };
@@ -145,6 +150,9 @@ export default function Test() {
         );
     }
 
+    const posStats = stats.filter(s => s.group === 'pos');
+    const negStats = stats.filter(s => s.group === 'neg');
+
     return (
         <div className="space-y-6 pb-20 max-w-6xl mx-auto px-2 relative">
 
@@ -158,7 +166,7 @@ export default function Test() {
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
-                            className="bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+                            className="bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[95vh]"
                         >
                             <div className="bg-blue-600 p-8 text-white flex justify-between items-center shrink-0">
                                 <div>
@@ -171,35 +179,54 @@ export default function Test() {
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-8 space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="glass-card p-6 flex flex-col items-center justify-center">
-                                        <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">腦電評測維度</h3>
-                                        <div className="w-full h-[250px]">
-                                            <ResponsiveContainer width="100%" height="100%">
-                                                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={stats.map(s => ({ name: s.label, val: s.val }))}>
-                                                    <PolarGrid stroke="#e2e8f0" />
-                                                    <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
-                                                    <RadarComponent name="Result" dataKey="val" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
-                                                </RadarChart>
-                                            </ResponsiveContainer>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Dual Radar Charts */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="glass-card p-4 flex flex-col items-center">
+                                            <h3 className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-2">正向性能指標</h3>
+                                            <div className="w-full h-[200px]">
+                                                <ResponsiveContainer width="100%" height="100%">
+                                                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={posStats.map(s => ({ name: s.label, val: s.val }))}>
+                                                        <PolarGrid stroke="#e2e8f0" />
+                                                        <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                                        <RadarComponent name="Result" dataKey="val" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
+                                                    </RadarChart>
+                                                </ResponsiveContainer>
+                                            </div>
+                                        </div>
+                                        <div className="glass-card p-4 flex flex-col items-center">
+                                            <h3 className="text-xs font-black text-rose-600 uppercase tracking-widest mb-2">負向壓力指標</h3>
+                                            <div className="w-full h-[200px]">
+                                                <ResponsiveContainer width="100%" height="100%">
+                                                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={negStats.map(s => ({ name: s.label, val: s.val }))}>
+                                                        <PolarGrid stroke="#e2e8f0" />
+                                                        <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                                        <RadarComponent name="Result" dataKey="val" stroke="#FB7185" fill="#FB7185" fillOpacity={0.6} />
+                                                    </RadarChart>
+                                                </ResponsiveContainer>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {stats.map((s) => (
-                                            <div
-                                                key={s.id}
-                                                onClick={() => handleIndicatorClick(s.val)}
-                                                className={`p-4 rounded-[1.5rem] border-2 transition-all cursor-pointer ${s.val < 50 ? 'border-orange-100 bg-orange-50/30' : 'border-emerald-100 bg-emerald-50/30'
-                                                    }`}
-                                            >
-                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{s.label}</p>
-                                                <p className={`text-3xl font-black ${s.val < 50 ? 'text-orange-500' : 'text-emerald-500'}`}>{s.val}</p>
-                                                {s.val < 50 && (
-                                                    <p className="text-[8px] font-bold text-orange-400 mt-1 italic animate-pulse">不合格 • 點擊調節</p>
-                                                )}
-                                            </div>
-                                        ))}
+                                    {/* Indicator Boxes */}
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                        {stats.map((s) => {
+                                            const alerted = isAlert(s);
+                                            return (
+                                                <div
+                                                    key={s.id}
+                                                    onClick={() => handleIndicatorClick(s)}
+                                                    className={`p-4 rounded-[1.5rem] border-2 transition-all cursor-pointer ${alerted ? 'border-rose-100 bg-rose-50/30' : 'border-emerald-100 bg-emerald-50/30'
+                                                        }`}
+                                                >
+                                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{s.label}</p>
+                                                    <p className={`text-3xl font-black ${alerted ? 'text-rose-500' : 'text-emerald-500'}`}>{s.val}</p>
+                                                    {alerted && (
+                                                        <p className="text-[8px] font-bold text-rose-400 mt-1 italic animate-pulse">異常 • 點擊調節</p>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
@@ -209,7 +236,7 @@ export default function Test() {
                                         專業解讀分析
                                     </h4>
                                     <p className="text-slate-600 leading-relaxed font-medium">
-                                        根據您的 3 分鐘深度掃描，您的 <span className="text-blue-600 font-bold">專注度</span> 表現優異，但 <span className="text-orange-500 font-bold">放鬆度</span> 與 <span className="text-orange-500 font-bold">疲勞值</span> 均顯示出明顯的系統負荷過重。建議您立即前往秘密花園進行 10 分鐘的深海冥想，以平衡您的腦諧度。
+                                        根據您的深度掃描分析，大腦目前呈現出一種 <span className="text-blue-600 font-bold">非均衡狀態</span>。您的正向性能指標如 <span className="text-emerald-600 font-bold">專注度</span> 維持良好，但負向壓力指標中的 <span className="text-rose-500 font-bold">疲勞值</span> 與 <span className="text-rose-500 font-bold">焦慮感</span> 已越過警戒線。這種「高能耗」模式會加速神經疲勞，建議前往秘密花園進行短暫冥想以調低壓力值。
                                     </p>
                                 </div>
                             </div>
@@ -325,25 +352,28 @@ export default function Test() {
                             <div className="relative w-24 h-24 flex items-center justify-center">
                                 <svg className="w-full h-full transform -rotate-90">
                                     <circle cx="48" cy="48" r="44" stroke="#e2e8f0" strokeWidth="8" fill="transparent" />
-                                    <circle cx="48" cy="48" r="44" stroke="#3B82F6" strokeWidth="8" fill="transparent" strokeDasharray={276} strokeDashoffset={276 - (276 * 66) / 100} strokeLinecap="round" />
+                                    <circle cx="48" cy="48" r="44" stroke="#0D9488" strokeWidth="8" fill="transparent" strokeDasharray={276} strokeDashoffset={276 - (276 * 85) / 100} strokeLinecap="round" />
                                 </svg>
-                                <span className="absolute text-2xl font-black text-slate-800">66</span>
+                                <span className="absolute text-2xl font-black text-slate-800">85</span>
                             </div>
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center italic mt-2">綜合情緒</span>
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center italic mt-2">綜合狀態</span>
                         </div>
 
-                        {stats.slice(0, 5).map((stat, i) => (
-                            <div
-                                key={i}
-                                onClick={() => handleIndicatorClick(stat.val)}
-                                className={`glass-card p-4 flex flex-col items-center justify-center space-y-2 border-2 transition-all cursor-pointer ${stat.val < 50 ? 'border-orange-100 hover:bg-orange-50 animate-pulse' : 'border-white hover:bg-emerald-50'
-                                    }`}
-                            >
-                                <span className={`text-2xl font-black ${stat.val < 50 ? 'text-orange-500' : 'text-slate-800'}`}>{stat.val}</span>
-                                <span className="text-[10px] font-bold text-slate-400 italic text-center uppercase tracking-widest">{stat.label}</span>
-                                {stat.val < 50 && <span className="text-[8px] font-black text-orange-400 -mt-1">點擊調節</span>}
-                            </div>
-                        ))}
+                        {stats.map((stat, i) => {
+                            const alerted = isAlert(stat);
+                            return (
+                                <div
+                                    key={i}
+                                    onClick={() => handleIndicatorClick(stat)}
+                                    className={`glass-card p-4 flex flex-col items-center justify-center space-y-2 border-2 transition-all cursor-pointer ${alerted ? 'border-rose-100 hover:bg-rose-50 animate-pulse' : 'border-white hover:bg-emerald-50'
+                                        }`}
+                                >
+                                    <span className={`text-2xl font-black ${alerted ? 'text-rose-500' : 'text-slate-800'}`}>{stat.val}</span>
+                                    <span className="text-[10px] font-bold text-slate-400 italic text-center uppercase tracking-widest">{stat.label}</span>
+                                    {alerted && <span className="text-[8px] font-black text-rose-400 -mt-1">點擊調節</span>}
+                                </div>
+                            );
+                        })}
                     </div>
 
                     <div className="flex flex-col items-center justify-center py-8 space-y-6">
