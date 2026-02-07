@@ -1,10 +1,10 @@
 export const BRAINWAVE_TYPES = [
-    { id: 'delta', label: 'Delta', sub: 'Sleep (0.5-4Hz)', color: 'var(--color-wave-delta)' },
-    { id: 'theta', label: 'Theta', sub: 'Deep Relax (4-8Hz)', color: 'var(--color-wave-theta)' },
-    { id: 'alpha', label: 'Alpha', sub: 'Relaxed (8-13Hz)', color: 'var(--color-wave-alpha)' },
-    { id: 'beta', label: 'Beta', sub: 'Focus (13-30Hz)', color: 'var(--color-wave-beta)' },
-    { id: 'gamma', label: 'Gamma', sub: 'Peak Insight (>30Hz)', color: 'var(--color-wave-gamma)' },
-    { id: 'stress', label: 'Stress', sub: 'System Load', color: 'var(--color-wave-stress)' },
+    { id: 'delta', label: 'Delta', sub: '深度睡眠 (0.5-4Hz)', color: 'var(--color-wave-delta)' },
+    { id: 'theta', label: 'Theta', sub: '深度放鬆 (4-8Hz)', color: 'var(--color-wave-theta)' },
+    { id: 'alpha', label: 'Alpha', sub: '放鬆專注 (8-13Hz)', color: 'var(--color-wave-alpha)' },
+    { id: 'beta', label: 'Beta', sub: '警覺專注 (13-30Hz)', color: 'var(--color-wave-beta)' },
+    { id: 'gamma', label: 'Gamma', sub: '巔峰思考 (>30Hz)', color: 'var(--color-wave-gamma)' },
+    { id: 'stress', label: '壓力', sub: '系統負荷', color: 'var(--color-wave-stress)' },
 ];
 
 export const generateWaveformData = (length = 20) => {
@@ -21,14 +21,14 @@ export const generateWaveformData = (length = 20) => {
 
 export const MOCK_REPORT_DATA = {
     score: 88,
-    mood: 'Focused & Calm',
-    summary: 'Your brain shows excellent alpha-beta balance. Ideal for deep work or creative problem solving.',
+    mood: '專注且冷靜',
+    summary: '您的腦電波顯示出極佳的 Alpha-Beta 平衡。非常適合進行深度工作或解創意性難題。',
     waves: [
         { name: 'Delta', value: 15, full: 100 },
         { name: 'Theta', value: 45, full: 100 },
         { name: 'Alpha', value: 78, full: 100 },
         { name: 'Beta', value: 82, full: 100 },
         { name: 'Gamma', value: 12, full: 100 },
-        { name: 'Stress', value: 25, full: 100 },
+        { name: '壓力', value: 25, full: 100 },
     ]
 };

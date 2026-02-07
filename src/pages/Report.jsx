@@ -1,26 +1,26 @@
 import React from 'react';
 import { Share2, Download, Filter, Info, TrendingUp } from 'lucide-react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Radar as RadarComponent } from 'recharts';
 import { MOCK_REPORT_DATA, BRAINWAVE_TYPES } from '../utils/mockData';
 import { motion } from 'framer-motion';
 
 export default function Report() {
     return (
-        <div className="space-y-8 pb-12">
+        <div className="space-y-8 pb-20 px-2">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-800">Deep Analysis Report</h1>
-                    <p className="text-slate-500">Session Date: Feb 7, 2026 • 16:45 PM</p>
+                    <h1 className="text-3xl font-bold text-slate-800">腦健康深度分析</h1>
+                    <p className="text-slate-500">測試日期: 2026年2月7日 • 16:45 PM</p>
                 </div>
                 <div className="flex gap-2">
                     <button className="flex items-center gap-2 px-4 py-2 glass-card text-slate-600 hover:text-blue-600 transition-colors">
                         <Share2 size={18} />
-                        <span className="hidden sm:inline">Share</span>
+                        <span className="hidden sm:inline">分享</span>
                     </button>
                     <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-2xl shadow-lg hover:bg-blue-700 transition-colors">
                         <Download size={18} />
-                        <span className="hidden sm:inline">Export PDF</span>
+                        <span className="hidden sm:inline">匯出 PDF</span>
                     </button>
                 </div>
             </div>
@@ -39,13 +39,13 @@ export default function Report() {
                         </svg>
                         <div className="absolute text-center">
                             <span className="text-5xl font-black text-slate-800">{MOCK_REPORT_DATA.score}</span>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">Health Score</p>
+                            <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">綜合評分</p>
                         </div>
                     </div>
                     <div className="flex-1 space-y-4">
                         <div className="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-bold">
                             <TrendingUp size={16} className="mr-2" />
-                            +4% improvement
+                            較上次提升 4%
                         </div>
                         <h2 className="text-2xl font-bold text-slate-800">{MOCK_REPORT_DATA.mood}</h2>
                         <p className="text-slate-600 leading-relaxed text-lg">
@@ -59,17 +59,17 @@ export default function Report() {
                     animate={{ opacity: 1, x: 0 }}
                     className="glass-card p-6 flex flex-col"
                 >
-                    <h3 className="text-sm font-bold text-slate-400 uppercase mb-4">Wave Balance Radar</h3>
+                    <h3 className="text-sm font-bold text-slate-400 uppercase mb-4">腦電波平衡 雷達圖</h3>
                     <div className="flex-1 min-h-[250px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={MOCK_REPORT_DATA.waves}>
                                 <PolarGrid stroke="#e2e8f0" />
-                                <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
-                                <Radar
+                                <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} />
+                                <RadarComponent
                                     name="Current"
                                     dataKey="value"
-                                    stroke="var(--color-primary-blue)"
-                                    fill="var(--color-primary-blue)"
+                                    stroke="#3B82F6"
+                                    fill="#3B82F6"
                                     fillOpacity={0.6}
                                 />
                             </RadarChart>
@@ -83,14 +83,15 @@ export default function Report() {
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <Filter size={20} className="text-blue-600" />
-                        Detailed Wave Breakdown
+                        各項波形數據詳細解析
                     </h2>
                     <Info size={18} className="text-slate-300" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     {BRAINWAVE_TYPES.map((wave, idx) => {
-                        const score = MOCK_REPORT_DATA.waves.find(w => w.name.toLowerCase() === wave.id.toLowerCase())?.value || 0;
+                        const waveData = MOCK_REPORT_DATA.waves.find(w => w.name.toLowerCase() === wave.id.toLowerCase() || (wave.id === 'stress' && w.name === '壓力'));
+                        const score = waveData?.value || 0;
                         return (
                             <motion.div
                                 key={wave.id}
@@ -114,8 +115,8 @@ export default function Report() {
                                     />
                                 </div>
 
-                                <p className="text-sm text-slate-500 italic">
-                                    Optimal range for this state is 60-85%. Your current value is {score > 85 ? 'higher' : score < 60 ? 'lower' : 'within'} the target.
+                                <p className="text-sm text-slate-500 italic leading-snug">
+                                    此狀態的理想範圍為 60-85%。您目前處於{score > 85 ? '偏高' : score < 60 ? '偏低' : '穩定'}狀態。
                                 </p>
                             </motion.div>
                         );

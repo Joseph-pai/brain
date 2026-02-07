@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Activity, Zap, Brain, ShieldCheck } from 'lucide-react';
+import { Play, Activity, User, Map, Brain, ShoppingCart, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import WaveformChart from '../components/WaveformChart';
 import { generateWaveformData, BRAINWAVE_TYPES } from '../utils/mockData';
 import { motion } from 'framer-motion';
+
+const mainBlocks = [
+    { id: 'connect', title: '連接腦機', sub: '設備連接與測試', icon: LinkIcon, path: '/test', color: 'bg-blue-600', text: 'text-white' },
+    { id: 'profile', title: '個人信息', sub: '帳戶與個性化設置', icon: User, path: '/profile', color: 'bg-white', text: 'text-slate-800' },
+    { id: 'map', title: '心理地圖', sub: '健康趨勢與分析', icon: Map, path: '/map', color: 'bg-white', text: 'text-slate-800' },
+    { id: 'garden', title: '秘密花園', sub: '音樂與心理調節', icon: Brain, path: '/garden', color: 'bg-white', text: 'text-slate-800' },
+    { id: 'mall', title: '健康方案', sub: '專業方案與商城', icon: ShoppingCart, path: '/mall', color: 'bg-white', text: 'text-slate-800' },
+];
 
 export default function Home() {
     const [waveData, setWaveData] = useState(generateWaveformData(30));
@@ -16,88 +24,73 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="space-y-6 pb-8">
-            {/* Hero Section - Vibrant & Professional */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-500 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden"
-            >
-                <div className="relative z-10">
-                    <h2 className="text-3xl font-bold mb-2">Hello, Joseph</h2>
-                    <p className="opacity-90 mb-8 max-w-xs text-lg">Your cognitive state is currently at peak focus. Ready to maintain it?</p>
+        <div className="space-y-6 pb-20">
+            {/* Header / Greetings */}
+            <div className="px-2">
+                <h1 className="text-3xl font-bold text-slate-900">早安，Joseph</h1>
+                <p className="text-slate-500">今天想如何調節您的心情？</p>
+            </div>
 
-                    <Link to="/test" className="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold shadow-lg hover:shadow-2xl transition-all hover:scale-105 active:scale-95 group">
-                        <Play size={20} className="mr-3 fill-current transition-transform group-hover:rotate-12" />
-                        Start Deep Analysis
-                    </Link>
-                </div>
-
-                {/* Decorative Background Element */}
-                <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-[-10%] right-[10%] w-32 h-32 bg-blue-400/20 rounded-full blur-2xl" />
-            </motion.div>
-
-            {/* Real-time Preview Section */}
-            <div className="glass-card p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                            <Activity className="text-blue-500 wave-pulse" size={20} />
-                            Live Brainwave Activity
-                        </h3>
-                        <p className="text-sm text-slate-500">Real-time mock feed (Alpha & Beta dominant)</p>
-                    </div>
-                    <span className="px-3 py-1 bg-green-100 text-green-600 text-xs font-bold rounded-full animate-pulse">
-                        CONNECTED
-                    </span>
-                </div>
-
-                <WaveformChart data={waveData} />
-
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-6">
-                    {BRAINWAVE_TYPES.map(wave => (
-                        <div key={wave.id} className="flex flex-col items-center p-2 rounded-xl bg-slate-50 border border-slate-100">
-                            <div className="w-2 h-2 rounded-full mb-1" style={{ backgroundColor: wave.color }} />
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{wave.label}</span>
+            {/* Main Navigation Grid - 5 Blocks */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Large Connect Block */}
+                <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="sm:col-span-2 relative overflow-hidden rounded-3xl p-8 bg-gradient-to-br from-indigo-600 to-blue-600 text-white shadow-xl shadow-blue-200"
+                >
+                    <Link to="/test" className="flex items-center justify-between relative z-10 w-full">
+                        <div className="space-y-2">
+                            <h2 className="text-3xl font-black">連接腦機</h2>
+                            <p className="text-blue-100 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                                點擊開始實時監測
+                            </p>
                         </div>
-                    ))}
+                        <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
+                            <LinkIcon size={32} />
+                        </div>
+                    </Link>
+                    <div className="absolute top-[-10%] right-[-5%] w-48 h-48 bg-white/10 rounded-full blur-3xl" />
+                </motion.div>
+
+                {/* Sub Blocks */}
+                <div className="grid grid-cols-2 sm:col-span-2 gap-4">
+                    {mainBlocks.slice(1).map((block) => {
+                        const Icon = block.icon;
+                        return (
+                            <motion.div
+                                key={block.id}
+                                whileHover={{ y: -5 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`glass-card p-6 flex flex-col items-center justify-center text-center group cursor-pointer aspect-square sm:aspect-auto`}
+                            >
+                                <Link to={block.path} className="w-full h-full flex flex-col items-center justify-center space-y-3">
+                                    <div className={`p-4 rounded-2xl bg-slate-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors`}>
+                                        <Icon size={28} />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <h3 className="font-bold text-slate-800">{block.title}</h3>
+                                        <p className="text-[10px] text-slate-400 hidden sm:block uppercase tracking-widest">{block.sub}</p>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
 
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="glass-card p-6 border-l-4 border-l-green-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-green-50 rounded-lg text-green-600">
-                            <ShieldCheck size={20} />
-                        </div>
-                        <span className="text-slate-500 text-sm font-medium">Cognitive Score</span>
-                    </div>
-                    <div className="text-3xl font-bold text-slate-800">92%</div>
-                    <div className="text-xs text-green-600 font-bold mt-1">Excellent Balance</div>
+            {/* Mini Waveform Preview for Dashboard */}
+            <div className="glass-card p-6 mt-8">
+                <div className="flex items-center justify-between mb-4 px-2">
+                    <h3 className="font-bold text-slate-800 flex items-center gap-2 italic">
+                        <Activity size={18} className="text-red-500 animate-pulse" />
+                        實時腦波狀態預覽
+                    </h3>
+                    <Link to="/test" className="text-xs text-blue-500 font-bold hover:underline">查看詳情</Link>
                 </div>
-
-                <div className="glass-card p-6 border-l-4 border-l-blue-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
-                            <Zap size={20} />
-                        </div>
-                        <span className="text-slate-500 text-sm font-medium">Focus Index</span>
-                    </div>
-                    <div className="text-3xl font-bold text-slate-800">8.4</div>
-                    <div className="text-xs text-blue-600 font-bold mt-1">High Beta Activity</div>
-                </div>
-
-                <div className="glass-card p-6 border-l-4 border-l-purple-500">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
-                            <Brain size={20} />
-                        </div>
-                        <span className="text-slate-500 text-sm font-medium">Mood State</span>
-                    </div>
-                    <div className="text-3xl font-bold text-slate-800">Flow</div>
-                    <div className="text-xs text-purple-600 font-bold mt-1">Low Stress Levels</div>
+                <div className="h-[150px]">
+                    <WaveformChart data={waveData} />
                 </div>
             </div>
         </div>
