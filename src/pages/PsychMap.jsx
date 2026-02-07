@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Compass, Calendar as CalendarIcon, BookOpen, FileText, History, TrendingUp, ChevronLeft, ChevronRight, Download, Share2, Star, ShieldCheck, Activity, Brain, Target, Sliders, Zap, Wind, Smile, Meh, Frown, MessageSquare, Plus, Trash2, Edit2, Check, X as XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, LineChart, Line, PolarRadiusAxis } from 'recharts';
