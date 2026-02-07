@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Compass, Calendar as CalendarIcon, BookOpen, FileText, History, TrendingUp, ChevronLeft, ChevronRight, Download, Share2, Star, ShieldCheck, Activity, Brain, Target, Sliders, Zap, Wind, Smile, Meh, Frown, MessageSquare } from 'lucide-react';
+import { Compass, Calendar as CalendarIcon, BookOpen, FileText, History, TrendingUp, ChevronLeft, ChevronRight, Download, Share2, Star, ShieldCheck, Activity, Brain, Target, Sliders, Zap, Wind, Smile, Meh, Frown, MessageSquare, Plus, Trash2, Edit2, Check, X as XIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, LineChart, Line } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, LineChart, Line, PolarRadiusAxis } from 'recharts';
 
 const MOCK_TRENDS = [
     { day: 'Mon', score: 65 },
@@ -123,6 +122,45 @@ export default function PsychMap() {
     const [activeModule, setActiveModule] = useState(null);
     const [selectedReportId, setSelectedReportId] = useState(null);
 
+    // Diary State
+    const [diaries, setDiaries] = useState(MOCK_DIARY);
+    const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
+    const [editingDiary, setEditingDiary] = useState(null);
+    const [diaryForm, setDiaryForm] = useState({ date: '2026.02.07', mood: '愉快', icon: Smile, color: 'text-emerald-500', note: '' });
+
+    const openAddDiary = () => {
+        setEditingDiary(null);
+        setDiaryForm({ date: '2026.02.07', mood: '愉快', icon: Smile, color: 'text-emerald-500', note: '' });
+        setIsDiaryModalOpen(true);
+    };
+
+    const openEditDiary = (entry) => {
+        setEditingDiary(entry);
+        setDiaryForm({ ...entry });
+        setIsDiaryModalOpen(true);
+    };
+
+    const saveDiary = () => {
+        if (editingDiary) {
+            setDiaries(prev => prev.map(d => d === editingDiary ? { ...diaryForm } : d));
+        } else {
+            setDiaries(prev => [{ ...diaryForm, score: Math.floor(60 + Math.random() * 30) }, ...prev]);
+        }
+        setIsDiaryModalOpen(false);
+    };
+
+    const deleteDiary = (entry) => {
+        setDiaries(prev => prev.filter(d => d !== entry));
+    };
+
+    const moodOptions = [
+        { label: '愉快', icon: Smile, color: 'text-emerald-500' },
+        { label: '平淡', icon: Meh, color: 'text-amber-500' },
+        { label: '焦慮', icon: Frown, color: 'text-rose-500' },
+        { label: '心流', icon: Zap, color: 'text-blue-500' },
+        { label: '平靜', icon: Wind, color: 'text-teal-500' },
+    ];
+
     const isAlert = (ind) => {
         if (ind.group === 'pos') return ind.avg < 50;
         if (ind.group === 'neg') return ind.avg > 50;
@@ -225,33 +263,34 @@ export default function PsychMap() {
     );
 
     const renderCalendar = () => {
+        // Mocking for Feb 2026 (Starts on Sunday)
         const days = Array.from({ length: 35 }, (_, i) => i + 1);
-        const lowScoreReports = MOCK_HISTORY_DATA.filter(r => r.score < 50);
 
         return (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
                 {renderHeader('健康日曆', CalendarIcon)}
-                <div className="glass-card p-8 bg-white border-2 border-slate-50">
-                    <div className="flex items-center justify-between mb-8">
+                <div className="glass-card p-8 bg-white border-2 border-slate-50 overflow-x-auto">
+                    <div className="flex items-center justify-between mb-8 min-w-[800px]">
                         <h3 className="text-xl font-black text-slate-800">2026年 2月</h3>
                         <div className="flex gap-2">
                             <button className="p-2 bg-slate-50 rounded-lg"><ChevronLeft size={16} /></button>
                             <button className="p-2 bg-slate-50 rounded-lg"><ChevronRight size={16} /></button>
                         </div>
                     </div>
-                    <div className="grid grid-cols-7 gap-px bg-slate-100 rounded-3xl overflow-hidden border border-slate-100">
+                    <div className="grid grid-cols-7 gap-px bg-slate-100 rounded-3xl overflow-hidden border border-slate-100 min-w-[800px]">
                         {['週日', '週一', '週二', '週三', '週四', '週五', '週六'].map(d => (
                             <div key={d} className="bg-slate-50 p-4 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">{d}</div>
                         ))}
                         {days.map((d, i) => {
-                            const reportForDay = lowScoreReports.find(r => {
+                            const reportForDay = MOCK_HISTORY_DATA.find(r => {
                                 const reportDay = parseInt(r.date.split('.')[2]);
                                 return reportDay === d;
                             });
 
                             return (
-                                <div key={i} className={`bg-white h-24 sm:h-32 p-4 relative border-t border-l border-slate-50 ${d > 28 ? 'bg-slate-50/30' : ''}`}>
+                                <div key={i} className={`bg-white h-48 sm:h-64 p-3 relative border-t border-l border-slate-50 ${d > 28 ? 'bg-slate-50/30' : ''}`}>
                                     <span className={`text-xs font-bold ${d > 28 ? 'text-slate-300' : 'text-slate-800'}`}>{d <= 28 ? d : ''}</span>
+
                                     {d <= 28 && reportForDay && (
                                         <motion.div
                                             initial={{ scale: 0.9, opacity: 0 }}
@@ -260,29 +299,32 @@ export default function PsychMap() {
                                                 setSelectedReportId(reportForDay.id);
                                                 setActiveModule('history');
                                             }}
-                                            className="absolute inset-0 m-2 mt-8 bg-rose-500/10 rounded-xl p-2 border border-rose-200 cursor-pointer hover:bg-rose-500/20 transition-colors"
+                                            className={`mt-2 p-2 rounded-xl border-2 transition-all cursor-pointer h-[calc(100%-24px)] flex flex-col gap-1 overflow-y-auto ${reportForDay.score < 50 ? 'border-rose-100 bg-rose-50/40 hover:bg-rose-50/60' : 'border-blue-100 bg-blue-50/40 hover:bg-blue-50/60'
+                                                }`}
                                         >
-                                            <div className="w-1 h-full bg-rose-600 rounded-full float-left mr-2" />
-                                            <p className="text-[8px] font-black text-rose-700 leading-tight">風險告警</p>
-                                            <p className="text-[10px] font-black text-rose-600 mt-1">得分: {reportForDay.score}</p>
+                                            <div className="flex items-center justify-between">
+                                                <span className={`text-[9px] font-black uppercase ${reportForDay.score < 50 ? 'text-rose-600' : 'text-blue-600'}`}>
+                                                    {reportForDay.score < 50 ? '風險提醒' : '健康良好'}
+                                                </span>
+                                                <span className="text-[10px] font-black">{reportForDay.score}分</span>
+                                            </div>
+                                            <div className="grid grid-cols-1 gap-1 pt-1 opacity-80">
+                                                {reportForDay.indicators.map((ind, idx) => (
+                                                    <div key={idx} className="flex items-center justify-between border-t border-white/50 pt-0.5">
+                                                        <span className="text-[7px] font-bold text-slate-500">{ind.label}</span>
+                                                        <span className={`text-[8px] font-black ${isAlert(ind) ? 'text-rose-500' : 'text-slate-700'}`}>{ind.avg}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </motion.div>
                                     )}
-                                    {d === 7 && (
+
+                                    {d === 7 && !reportForDay && (
                                         <div className="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full" title="今日測試已完成" />
                                     )}
                                 </div>
                             );
                         })}
-                    </div>
-                    <div className="mt-8 flex items-center gap-6">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-rose-500 rounded-full" />
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">異常評測 (&lt; 50分)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-emerald-500 rounded-full" />
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">檢測完成</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -292,24 +334,33 @@ export default function PsychMap() {
     const renderDiary = () => (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
             {renderHeader('心情日記', BookOpen)}
-            <button className="w-full py-6 bg-emerald-600 text-white rounded-[2rem] font-black italic text-xl shadow-xl shadow-emerald-100 flex items-center justify-center gap-3">
-                <MessageSquare size={24} /> 紀錄此刻心情
+            <button
+                onClick={openAddDiary}
+                className="w-full py-6 bg-emerald-600 text-white rounded-[2rem] font-black italic text-xl shadow-xl shadow-emerald-100 flex items-center justify-center gap-3 hover:bg-emerald-700 transition-colors"
+            >
+                <Plus size={24} /> 紀錄此刻心情
             </button>
             <div className="space-y-6">
-                {MOCK_DIARY.map((entry, i) => (
+                {diaries.map((entry, i) => (
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.1 }}
                         key={i}
-                        className="glass-card p-10 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden"
+                        className="glass-card p-10 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden group"
                     >
-                        <div className="flex-1 space-y-4 relative z-10">
+                        <div className="flex-1 space-y-4 relative z-10 w-full">
                             <div className="flex items-center justify-between">
                                 <span className="text-xs font-black text-slate-400 tracking-[0.2em]">{entry.date}</span>
-                                <div className="flex items-center gap-2">
-                                    <entry.icon size={24} className={entry.color} />
-                                    <span className={`font-black uppercase tracking-widest ${entry.color}`}>{entry.mood}</span>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-2">
+                                        <entry.icon size={24} className={entry.color} />
+                                        <span className={`font-black uppercase tracking-widest ${entry.color}`}>{entry.mood}</span>
+                                    </div>
+                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button onClick={() => openEditDiary(entry)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg"><Edit2 size={16} /></button>
+                                        <button onClick={() => deleteDiary(entry)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg"><Trash2 size={16} /></button>
+                                    </div>
                                 </div>
                             </div>
                             <p className="text-slate-600 font-medium leading-relaxed text-lg">"{entry.note}"</p>
@@ -323,6 +374,71 @@ export default function PsychMap() {
                     </motion.div>
                 ))}
             </div>
+
+            {/* Diary Modal */}
+            <AnimatePresence>
+                {isDiaryModalOpen && (
+                    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl space-y-6"
+                        >
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-2xl font-black text-slate-800">{editingDiary ? '修改心情' : '新增心情'}</h3>
+                                <button onClick={() => setIsDiaryModalOpen(false)} className="p-2 text-slate-400 hover:text-slate-600"><XIcon size={24} /></button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">日期</label>
+                                    <input
+                                        type="text"
+                                        value={diaryForm.date}
+                                        onChange={(e) => setDiaryForm({ ...diaryForm, date: e.target.value })}
+                                        className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold focus:border-blue-500 outline-none transition-colors"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">心情選擇</label>
+                                    <div className="flex flex-wrap gap-3">
+                                        {moodOptions.map((opt) => (
+                                            <button
+                                                key={opt.label}
+                                                onClick={() => setDiaryForm({ ...diaryForm, mood: opt.label, icon: opt.icon, color: opt.color })}
+                                                className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 transition-all ${diaryForm.mood === opt.label ? 'border-blue-500 bg-blue-50' : 'border-slate-50 bg-white hover:border-slate-200'
+                                                    }`}
+                                            >
+                                                <opt.icon size={20} className={opt.color} />
+                                                <span className={`text-sm font-black ${opt.color}`}>{opt.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">寫下你的心情...</label>
+                                    <textarea
+                                        value={diaryForm.note}
+                                        onChange={(e) => setDiaryForm({ ...diaryForm, note: e.target.value })}
+                                        placeholder="今天感覺如何？"
+                                        className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl font-medium focus:border-blue-500 outline-none transition-colors h-32 resize-none"
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={saveDiary}
+                                className="w-full py-5 bg-blue-600 text-white rounded-[1.8rem] font-black text-xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Check size={24} /> {editingDiary ? '儲存修改' : '發佈日記'}
+                            </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 
@@ -341,8 +457,8 @@ export default function PsychMap() {
                 })}
 
                 <div className={`bg-gradient-to-br p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl overflow-hidden relative ${report.score >= 80 ? 'from-[#064e3b] to-[#065f46]' :
-                        report.score >= 60 ? 'from-[#1e1b4b] to-[#312e81]' :
-                            'from-[#7f1d1d] to-[#991b1b]'
+                    report.score >= 60 ? 'from-[#1e1b4b] to-[#312e81]' :
+                        'from-[#7f1d1d] to-[#991b1b]'
                     }`}>
                     <div className="space-y-4 text-center md:text-left relative z-10">
                         <h1 className="text-4xl font-black italic">綜合腦狀態評測</h1>
@@ -370,6 +486,13 @@ export default function PsychMap() {
                                     <RadarChart cx="50%" cy="50%" outerRadius="75%" data={posIndicators.map(ind => ({ subject: ind.label, A: ind.avg }))}>
                                         <PolarGrid stroke="#e2e8f0" />
                                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                        <PolarRadiusAxis
+                                            angle={30}
+                                            domain={[0, 100]}
+                                            tick={{ fontSize: 8, fill: '#94a3b8' }}
+                                            axisLine={false}
+                                            tickCount={6}
+                                        />
                                         <Radar name="性能" dataKey="A" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
                                     </RadarChart>
                                 </ResponsiveContainer>
@@ -382,6 +505,13 @@ export default function PsychMap() {
                                     <RadarChart cx="50%" cy="50%" outerRadius="75%" data={negIndicators.map(ind => ({ subject: ind.label, A: ind.avg }))}>
                                         <PolarGrid stroke="#e2e8f0" />
                                         <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                        <PolarRadiusAxis
+                                            angle={30}
+                                            domain={[0, 100]}
+                                            tick={{ fontSize: 8, fill: '#94a3b8' }}
+                                            axisLine={false}
+                                            tickCount={6}
+                                        />
                                         <Radar name="壓力" dataKey="A" stroke="#FB7185" fill="#FB7185" fillOpacity={0.6} />
                                     </RadarChart>
                                 </ResponsiveContainer>
@@ -435,8 +565,8 @@ export default function PsychMap() {
                                 <h4 className="font-black text-slate-800 text-lg">{item.date.split(' ')[0]} 測評報告</h4>
                                 <div className="flex items-center gap-3 mt-1">
                                     <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${item.score >= 80 ? 'text-emerald-600 bg-emerald-50' :
-                                            item.score >= 60 ? 'text-blue-600 bg-blue-50' :
-                                                'text-rose-600 bg-rose-50'
+                                        item.score >= 60 ? 'text-blue-600 bg-blue-50' :
+                                            'text-rose-600 bg-rose-50'
                                         }`}>綜合得分: {item.score}</span>
                                     <span className="text-[10px] font-black text-slate-300 uppercase italic">ID: 0x{item.id}</span>
                                 </div>

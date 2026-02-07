@@ -189,6 +189,13 @@ export default function Test() {
                                                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={posStats.map(s => ({ name: s.label, val: s.val }))}>
                                                         <PolarGrid stroke="#e2e8f0" />
                                                         <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                                        <PolarRadiusAxis
+                                                            angle={30}
+                                                            domain={[0, 100]}
+                                                            tick={{ fontSize: 8, fill: '#94a3b8' }}
+                                                            axisLine={false}
+                                                            tickCount={6}
+                                                        />
                                                         <RadarComponent name="Result" dataKey="val" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
                                                     </RadarChart>
                                                 </ResponsiveContainer>
@@ -201,6 +208,13 @@ export default function Test() {
                                                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={negStats.map(s => ({ name: s.label, val: s.val }))}>
                                                         <PolarGrid stroke="#e2e8f0" />
                                                         <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                                        <PolarRadiusAxis
+                                                            angle={30}
+                                                            domain={[0, 100]}
+                                                            tick={{ fontSize: 8, fill: '#94a3b8' }}
+                                                            axisLine={false}
+                                                            tickCount={6}
+                                                        />
                                                         <RadarComponent name="Result" dataKey="val" stroke="#FB7185" fill="#FB7185" fillOpacity={0.6} />
                                                     </RadarChart>
                                                 </ResponsiveContainer>
@@ -287,8 +301,8 @@ export default function Test() {
                                     key={band.id}
                                     onClick={() => setActiveWave(band.id)}
                                     className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter transition-all border-2 ${activeWave === band.id
-                                            ? 'text-white border-transparent'
-                                            : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'
+                                        ? 'text-white border-transparent'
+                                        : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'
                                         }`}
                                     style={{ backgroundColor: activeWave === band.id ? WAVE_COLORS[band.id] : '' }}
                                 >
