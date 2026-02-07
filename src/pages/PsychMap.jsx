@@ -15,8 +15,8 @@ const MOCK_TRENDS = [
 
 const MOCK_DIARY = [
     { date: '2026.02.07', mood: '愉快', icon: Smile, color: 'text-emerald-500', score: 88, note: '今天完成了繁重的工作，心情很輕鬆。測試顯示放鬆度明顯提升。' },
-    { date: '2026.02.06', mood: '疲乏', icon: Meh, color: 'text-amber-500', score: 72, note: '會議太多，專注度維持良好但疲勞感偏高。' },
-    { date: '2026.02.05', mood: '焦慮', icon: Frown, color: 'text-rose-500', score: 58, note: '項目進度受阻，壓力指數上升。建議去秘密花園聽放鬆音樂。' },
+    { date: '2026.02.06', mood: '不爽', icon: Meh, color: 'text-orange-500', score: 72, note: '會議太多，專注度維持良好但疲勞感偏高。' },
+    { date: '2026.02.05', mood: '憂慮', icon: CloudRain, color: 'text-slate-500', score: 58, note: '項目進度受阻，壓力指數上升。建議去秘密花園聽放鬆音樂。' },
 ];
 
 const LATEST_REPORT = {
