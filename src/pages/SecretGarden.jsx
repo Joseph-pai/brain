@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { Music, Gamepad, MessageSquare, Video, Play, Pause, SkipForward, SkipBack, Plus, Trash2, CheckCircle2, XCircle, ChevronLeft, Volume2, Search, Palmtree, Headphones, Rocket, Mic2, Clapperboard, Check, X, Upload, Edit2, GripVertical } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 
