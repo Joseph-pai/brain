@@ -97,8 +97,8 @@ export default function Report() {
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.05 }}
                                         className={`group transition-colors rounded-2xl cursor-pointer ${ind.avg < 50
-                                                ? 'bg-orange-50/50 hover:bg-orange-100'
-                                                : 'bg-slate-50/50 hover:bg-blue-50'
+                                            ? 'bg-orange-50/50 hover:bg-orange-100'
+                                            : 'bg-slate-50/50 hover:bg-blue-50'
                                             }`}
                                         onClick={() => handleIndicatorClick(ind)}
                                     >
@@ -109,10 +109,10 @@ export default function Report() {
                                         <td className={`py-4 px-4 font-black ${ind.avg < 50 ? 'text-orange-600 animate-pulse' : 'text-blue-600'}`}>{ind.avg}</td>
                                         <td className="py-4 px-4">
                                             <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase ${ind.avg < 50
-                                                    ? 'bg-orange-100 text-orange-700'
-                                                    : ind.status.includes('偏高') || ind.status.includes('較強') || ind.status.includes('較高')
-                                                        ? 'bg-blue-100 text-blue-700'
-                                                        : 'bg-emerald-100 text-emerald-700'
+                                                ? 'bg-orange-100 text-orange-700'
+                                                : ind.status.includes('偏高') || ind.status.includes('較強') || ind.status.includes('較高')
+                                                    ? 'bg-blue-100 text-blue-700'
+                                                    : 'bg-emerald-100 text-emerald-700'
                                                 }`}>
                                                 {ind.avg < 50 ? '需調節' : ind.status}
                                             </span>
@@ -127,19 +127,58 @@ export default function Report() {
                     </div>
                 </div>
 
-                {/* Radar visualization */}
+                {/* Dual Radar visualization */}
                 <div className="glass-card p-10 flex flex-col items-center justify-center space-y-8">
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">多維度雷達分析</h3>
-                    <div className="w-full h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                                <PolarGrid stroke="#e2e8f0" />
-                                <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
-                                <Radar name="腦狀態" dataKey="A" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
-                            </RadarChart>
-                        </ResponsiveContainer>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">多維度性能與壓力分析</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                        <div className="flex flex-col items-center">
+                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-4">正向性能維度</span>
+                            <div className="w-full h-64">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={REPORT_DATA.indicators.filter(ind => ind.id === 'relaxation' || ind.id === 'focus').map(ind => ({ subject: ind.label, A: ind.avg }))}>
+                                        <PolarGrid stroke="#e2e8f0" />
+                                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                        <Radar name="性能" dataKey="A" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-4">負向壓力維度</span>
+                            <div className="w-full h-64">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={REPORT_DATA.indicators.filter(ind => ind.id === 'fatigue' || ind.id === 'stress' || ind.id === 'anxiety').map(ind => ({ subject: ind.label, A: ind.avg }))}>
+                                        <PolarGrid stroke="#e2e8f0" />
+                                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
+                                        <Radar name="壓力" dataKey="A" stroke="#FB7185" fill="#FB7185" fillOpacity={0.6} />
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            {/* Analysis Conclusion */}
+            <div className="glass-card p-10 space-y-6 bg-blue-50/30 border-2 border-blue-100/50">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-600 text-white rounded-2xl">
+                        <Brain size={24} />
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-black text-slate-800 italic">系統深度分析結論</h3>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Expert Intelligence Synthesis</p>
+                    </div>
+                </div>
+                <p className="text-slate-600 leading-relaxed font-medium text-lg">
+                    綜合本週數據趨勢，我們觀察到您的大腦在高強度工作期間展現出了極佳的 <span className="text-blue-600 font-bold">專注深度</span>。然而，長期積累的
+                    <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">神經疲勞</button>
+                    正逐漸侵蝕您的情緒穩定性。特別是在下午 3:00 至 5:00 期間，
+                    <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">壓力系數</button>
+                    有顯著抬升現象。為了防止長期耗竭，建議今天下午點擊進入
+                    <button onClick={() => navigate('/garden')} className="text-blue-600 font-bold underline mx-1">伊甸園</button>
+                    進行至少 15 分鐘的音樂調節或沉浸式放鬆，以重置您的基線心理狀態。
+                </p>
             </div>
 
             {/* Bottom Section: Trend */}

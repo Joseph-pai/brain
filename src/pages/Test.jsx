@@ -250,7 +250,12 @@ export default function Test() {
                                         專業解讀分析
                                     </h4>
                                     <p className="text-slate-600 leading-relaxed font-medium">
-                                        根據您的深度掃描分析，大腦目前呈現出一種 <span className="text-blue-600 font-bold">非均衡狀態</span>。您的正向性能指標如 <span className="text-emerald-600 font-bold">專注度</span> 維持良好，但負向壓力指標中的 <span className="text-rose-500 font-bold">疲勞值</span> 與 <span className="text-rose-500 font-bold">焦慮感</span> 已越過警戒線。這種「高能耗」模式會加速神經疲勞，建議前往秘密花園進行短暫冥想以調低壓力值。
+                                        根據您的深度掃描分析，大腦目前呈現出一種 <span className="text-blue-600 font-bold">非均衡狀態</span>。您的正向性能指標如 <span className="text-emerald-600 font-bold">專注度</span> 維持良好，但負向壓力指標中的
+                                        <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">疲勞值</button> 與
+                                        <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">焦慮感</button>
+                                        已越過警戒線。這種「高能耗」模式會加速神經疲勞，建議前往
+                                        <button onClick={() => navigate('/garden')} className="text-blue-600 font-bold underline mx-1">伊甸園</button>
+                                        進行短暫冥想或聽音樂以調低壓力值。
                                     </p>
                                 </div>
                             </div>
