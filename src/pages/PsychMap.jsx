@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, Calendar as CalendarIcon, BookOpen, FileText, History, TrendingUp, ChevronLeft, ChevronRight, Download, Share2, Star, ShieldCheck, Activity, Brain, Target, Sliders, Zap, Wind, Smile, Meh, Frown, MessageSquare, Plus, Trash2, Edit2, Check, X as XIcon } from 'lucide-react';
+import { Compass, Calendar as CalendarIcon, BookOpen, FileText, History, TrendingUp, ChevronLeft, ChevronRight, Download, Share2, Star, ShieldCheck, Activity, Brain, Target, Sliders, Zap, Wind, Smile, Meh, Frown, MessageSquare, Plus, Trash2, Edit2, Check, X as XIcon, Sun, CloudRain, Sparkles, Angry, CloudDrizzle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, LineChart, Line, PolarRadiusAxis } from 'recharts';
 
@@ -156,10 +156,13 @@ export default function PsychMap() {
 
     const moodOptions = [
         { label: '愉快', icon: Smile, color: 'text-emerald-500' },
-        { label: '平淡', icon: Meh, color: 'text-amber-500' },
-        { label: '焦慮', icon: Frown, color: 'text-rose-500' },
-        { label: '心流', icon: Zap, color: 'text-blue-500' },
+        { label: '喜樂', icon: Sun, color: 'text-yellow-500' },
+        { label: '興奮', icon: Sparkles, color: 'text-purple-500' },
         { label: '平靜', icon: Wind, color: 'text-teal-500' },
+        { label: '不爽', icon: Meh, color: 'text-orange-500' },
+        { label: '憂慮', icon: CloudRain, color: 'text-slate-500' },
+        { label: '悲傷', icon: CloudDrizzle, color: 'text-blue-500' },
+        { label: '憤怒', icon: Angry, color: 'text-rose-600' },
     ];
 
     const isAlert = (ind) => {
@@ -352,13 +355,16 @@ export default function PsychMap() {
                     >
                         <div className="flex-1 space-y-4 relative z-10 w-full">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-black text-slate-400 tracking-[0.2em]">{entry.date}</span>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-sm font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">#{diaries.length - i}</span>
+                                    <span className="text-xs font-black text-slate-400 tracking-[0.2em]">{entry.date}</span>
+                                </div>
                                 <div className="flex items-center gap-4">
                                     <div className="flex items-center gap-2">
                                         <entry.icon size={24} className={entry.color} />
                                         <span className={`font-black uppercase tracking-widest ${entry.color}`}>{entry.mood}</span>
                                     </div>
-                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="flex gap-2">
                                         <button onClick={() => openEditDiary(entry)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg"><Edit2 size={16} /></button>
                                         <button onClick={() => deleteDiary(entry)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg"><Trash2 size={16} /></button>
                                     </div>
