@@ -6,13 +6,22 @@ import { generateWaveformData } from '../utils/mockData';
 import { useNavigate } from 'react-router-dom';
 
 const WAVE_COLORS = {
-    delta: '#1E1B4B',
+    delta: '#7F1D1D', // Deep Red
     theta: '#F59E0B',
     alpha: '#10B981',
     beta: '#3B82F6',
     gamma: '#8B5CF6',
     stress: '#FB7185'
 };
+
+const BANDS = [
+    { id: 'delta', label: 'Delta' },
+    { id: 'theta', label: 'Theta' },
+    { id: 'alpha', label: 'Alpha' },
+    { id: 'beta', label: 'Beta' },
+    { id: 'gamma', label: 'Gamma' },
+    { id: 'stress', label: 'Stress' }
+];
 
 const generateRawSignal = (length = 100) => {
     return Array.from({ length }, (_, i) => ({
@@ -26,15 +35,16 @@ const generateRawSignal = (length = 100) => {
     }));
 };
 
-const generateSpectrum = () => {
-    return [
-        { name: 'Delta', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.delta },
-        { name: 'Theta', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.theta },
-        { name: 'Alpha', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.alpha },
-        { name: 'Beta', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.beta },
-        { name: 'Gamma', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.gamma },
-        { name: 'Stress', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.stress },
-    ];
+const generateSpectrum = (latestData = null) => {
+    if (!latestData) {
+        return BANDS.map(b => ({ name: b.label, id: b.id, val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS[b.id] }));
+    }
+    return BANDS.map(b => ({
+        name: b.label,
+        id: b.id,
+        val: Math.floor(latestData[b.id]),
+        color: WAVE_COLORS[b.id]
+    }));
 };
 
 export default function Test() {
@@ -44,6 +54,7 @@ export default function Test() {
     const [isFinished, setIsFinished] = useState(false);
     const [rawSignal, setRawSignal] = useState(generateRawSignal());
     const [spectrum, setSpectrum] = useState(generateSpectrum());
+    const [activeWave, setActiveWave] = useState('delta');
     const [timer, setTimer] = useState(1800); // 180.0 seconds (3 minutes)
     const [stats, setStats] = useState([
         { label: '放鬆度', val: 56, id: 'relaxation' },
@@ -58,9 +69,10 @@ export default function Test() {
         let interval;
         if (isTesting && timer > 0) {
             interval = setInterval(() => {
+                let latestPoint;
                 setRawSignal(prev => {
                     const nextTime = (prev[prev.length - 1]?.time || 0) + 1;
-                    const newData = {
+                    latestPoint = {
                         time: nextTime,
                         delta: 25 + Math.random() * 74,
                         theta: 25 + Math.random() * 74,
@@ -69,9 +81,16 @@ export default function Test() {
                         gamma: 25 + Math.random() * 74,
                         stress: 25 + Math.random() * 74
                     };
-                    return [...prev.slice(1), newData];
+                    return [...prev.slice(1), latestPoint];
                 });
-                setSpectrum(generateSpectrum());
+
+                // Update spectrum based on latest simulation values to ensure synchronicity
+                setSpectrum(prev => {
+                    // Since setRawSignal hasn't finished, we simulate the logic here or wait for next tick
+                    // Better to use the latestPoint generated above
+                    return generateSpectrum(latestPoint);
+                });
+
                 setTimer(t => {
                     if (t <= 1) {
                         setIsTesting(false);
@@ -233,8 +252,23 @@ export default function Test() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                 <div className="glass-card p-6 space-y-6">
-                    <div className="flex items-center justify-between">
-                        <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">多頻段原始信號 (25-99)</h4>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">多頻段原始信號</h4>
+                        <div className="flex flex-wrap gap-2">
+                            {BANDS.map(band => (
+                                <button
+                                    key={band.id}
+                                    onClick={() => setActiveWave(band.id)}
+                                    className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter transition-all border-2 ${activeWave === band.id
+                                            ? 'text-white border-transparent'
+                                            : 'bg-white border-slate-100 text-slate-400 hover:border-slate-300'
+                                        }`}
+                                    style={{ backgroundColor: activeWave === band.id ? WAVE_COLORS[band.id] : '' }}
+                                >
+                                    {band.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                     <div className="h-[300px] w-full border-b border-slate-100">
                         <ResponsiveContainer width="100%" height="100%">
@@ -251,12 +285,14 @@ export default function Test() {
                                     tick={{ fontSize: 9, fill: '#94a3b8' }}
                                 />
                                 <Tooltip contentStyle={{ borderRadius: '1rem', border: 'none', shadow: 'none', fontWeight: 900, fontSize: '10px' }} />
-                                <Line type="monotone" dataKey="delta" stroke={WAVE_COLORS.delta} strokeWidth={2} dot={false} isAnimationActive={false} />
-                                <Line type="monotone" dataKey="theta" stroke={WAVE_COLORS.theta} strokeWidth={2} dot={false} isAnimationActive={false} />
-                                <Line type="monotone" dataKey="alpha" stroke={WAVE_COLORS.alpha} strokeWidth={2} dot={false} isAnimationActive={false} />
-                                <Line type="monotone" dataKey="beta" stroke={WAVE_COLORS.beta} strokeWidth={2} dot={false} isAnimationActive={false} />
-                                <Line type="monotone" dataKey="gamma" stroke={WAVE_COLORS.gamma} strokeWidth={2} dot={false} isAnimationActive={false} />
-                                <Line type="monotone" dataKey="stress" stroke={WAVE_COLORS.stress} strokeWidth={2} dot={false} isAnimationActive={false} />
+                                <Line
+                                    type="monotone"
+                                    dataKey={activeWave}
+                                    stroke={WAVE_COLORS[activeWave]}
+                                    strokeWidth={3}
+                                    dot={false}
+                                    isAnimationActive={false}
+                                />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
