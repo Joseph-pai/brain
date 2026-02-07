@@ -38,7 +38,7 @@ const subModules = [
 export default function PsychMap() {
     const [activeModule, setActiveModule] = useState(null);
 
-    const renderHeader = (title, icon: Icon) => (
+    const renderHeader = (title, Icon) => (
         <div className="flex items-center justify-between mb-8">
             <button
                 onClick={() => setActiveModule(null)}
