@@ -83,17 +83,17 @@ export default function Test() {
             <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8 px-2">
                 <motion.div
                     whileHover={{ scale: 1.05 }}
-                    className="w-48 h-48 bg-orange-600 rounded-[3rem] flex items-center justify-center text-white shadow-2xl shadow-orange-200"
+                    className="w-48 h-48 bg-blue-600 rounded-[3rem] flex items-center justify-center text-white shadow-2xl shadow-blue-200"
                 >
                     <Bluetooth size={80} />
                 </motion.div>
                 <div className="text-center space-y-4">
-                    <h2 className="text-4xl font-black text-red-950">準備好連接了嗎？</h2>
+                    <h2 className="text-4xl font-black text-slate-800">準備好連接了嗎？</h2>
                     <p className="text-slate-400 font-medium max-w-sm">請確保您的腦機設備已開啟並處於配對模式。</p>
                 </div>
                 <button
                     onClick={() => setIsConnected(true)}
-                    className="px-12 py-5 bg-orange-600 text-white rounded-[2rem] font-black text-xl shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all"
+                    className="px-12 py-5 bg-blue-600 text-white rounded-[2rem] font-black text-xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all"
                 >
                     立即連接設備
                 </button>
@@ -110,17 +110,17 @@ export default function Test() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="fixed inset-0 z-[100] bg-red-950/80 backdrop-blur-xl flex items-center justify-center p-4"
+                        className="fixed inset-0 z-[100] bg-slate-900/80 backdrop-blur-xl flex items-center justify-center p-4"
                     >
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             className="bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
                         >
-                            <div className="bg-orange-600 p-8 text-white flex justify-between items-center shrink-0">
+                            <div className="bg-blue-600 p-8 text-white flex justify-between items-center shrink-0">
                                 <div>
                                     <h2 className="text-3xl font-black">整體測評報告</h2>
-                                    <p className="text-orange-100 text-xs font-bold uppercase tracking-widest mt-1">Full Health Assessment Report</p>
+                                    <p className="text-blue-100 text-xs font-bold uppercase tracking-widest mt-1">Full Health Assessment Report</p>
                                 </div>
                                 <button onClick={() => setIsFinished(false)} className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
                                     <X size={24} />
@@ -137,7 +137,7 @@ export default function Test() {
                                                 <RadarChart cx="50%" cy="50%" outerRadius="80%" data={stats.map(s => ({ name: s.label, val: s.val }))}>
                                                     <PolarGrid stroke="#e2e8f0" />
                                                     <PolarAngleAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
-                                                    <RadarComponent name="Result" dataKey="val" stroke="#F97316" fill="#F97316" fillOpacity={0.6} />
+                                                    <RadarComponent name="Result" dataKey="val" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
                                                 </RadarChart>
                                             </ResponsiveContainer>
                                         </div>
@@ -149,13 +149,13 @@ export default function Test() {
                                             <div
                                                 key={s.id}
                                                 onClick={() => handleIndicatorClick(s.val)}
-                                                className={`p-4 rounded-[1.5rem] border-2 transition-all cursor-pointer ${s.val < 50 ? 'border-red-100 bg-red-50/30' : 'border-emerald-100 bg-emerald-50/30'
+                                                className={`p-4 rounded-[1.5rem] border-2 transition-all cursor-pointer ${s.val < 50 ? 'border-orange-100 bg-orange-50/30' : 'border-emerald-100 bg-emerald-50/30'
                                                     }`}
                                             >
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{s.label}</p>
-                                                <p className={`text-3xl font-black ${s.val < 50 ? 'text-red-600' : 'text-emerald-500'}`}>{s.val}</p>
+                                                <p className={`text-3xl font-black ${s.val < 50 ? 'text-orange-500' : 'text-emerald-500'}`}>{s.val}</p>
                                                 {s.val < 50 && (
-                                                    <p className="text-[8px] font-bold text-red-400 mt-1 italic animate-pulse">不合格 • 點擊調節</p>
+                                                    <p className="text-[8px] font-bold text-orange-400 mt-1 italic animate-pulse">不合格 • 點擊調節</p>
                                                 )}
                                             </div>
                                         ))}
@@ -163,13 +163,13 @@ export default function Test() {
                                 </div>
 
                                 {/* Analysis */}
-                                <div className="glass-card p-8 bg-orange-50/50 border-2 border-orange-100/50">
-                                    <h4 className="flex items-center gap-2 text-xl font-black text-red-950 mb-4 italic">
-                                        <Brain size={24} className="text-orange-600" />
+                                <div className="glass-card p-8 bg-blue-50/50 border-2 border-blue-100/50">
+                                    <h4 className="flex items-center gap-2 text-xl font-black text-slate-800 mb-4 italic">
+                                        <Brain size={24} className="text-blue-600" />
                                         專業解讀分析
                                     </h4>
                                     <p className="text-slate-600 leading-relaxed font-medium">
-                                        根據您的 3 分鐘深度掃描，您的 <span className="text-orange-600 font-bold">專注度</span> 表現優異，但 <span className="text-red-500 font-bold">放鬆度</span> 與 <span className="text-red-500 font-bold">疲勞值</span> 均顯示出明顯的系統負荷過重。建議您立即前往秘密花園進行 10 分鐘的深海冥想，以平衡您的腦諧度。
+                                        根據您的 3 分鐘深度掃描，您的 <span className="text-blue-600 font-bold">專注度</span> 表現優異，但 <span className="text-orange-500 font-bold">放鬆度</span> 與 <span className="text-orange-500 font-bold">疲勞值</span> 均顯示出明顯的系統負荷過重。建議您立即前往秘密花園進行 10 分鐘的深海冥想，以平衡您的腦諧度。
                                     </p>
                                 </div>
                             </div>
@@ -177,7 +177,7 @@ export default function Test() {
                             <div className="p-8 border-t border-slate-100 shrink-0">
                                 <button
                                     onClick={() => navigate('/garden')}
-                                    className="w-full py-5 bg-orange-600 text-white rounded-[2rem] font-black text-xl shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-5 bg-blue-600 text-white rounded-[2rem] font-black text-xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
                                 >
                                     立即前往花園調節 <ChevronRight size={24} />
                                 </button>
@@ -188,13 +188,13 @@ export default function Test() {
             </AnimatePresence>
 
             {/* Top Device Status Bar */}
-            <div className="glass-card p-4 flex flex-wrap items-center justify-between gap-4 border-2 border-orange-50/50">
+            <div className="glass-card p-4 flex flex-wrap items-center justify-between gap-4 border-2 border-blue-50/50">
                 <div className="flex items-center gap-4">
-                    <div className="p-3 bg-orange-600 text-white rounded-2xl">
+                    <div className="p-3 bg-blue-600 text-white rounded-2xl">
                         <Bluetooth size={20} />
                     </div>
                     <div>
-                        <h3 className="font-black text-red-950">BrainFit V2</h3>
+                        <h3 className="font-black text-slate-800">BrainFit V2</h3>
                         <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">Connected • 實時數據傳輸中</p>
                     </div>
                 </div>
@@ -216,7 +216,7 @@ export default function Test() {
                 {/* Left: Raw Signal Wave */}
                 <div className="glass-card p-6 space-y-6">
                     <div className="flex items-center justify-between">
-                        <h4 className="px-4 py-1.5 bg-orange-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">原始信號波</h4>
+                        <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">原始信號波</h4>
                     </div>
                     <div className="h-[200px] w-full border-b border-slate-100">
                         <ResponsiveContainer width="100%" height="100%">
@@ -224,7 +224,7 @@ export default function Test() {
                                 <Line
                                     type="monotone"
                                     dataKey="val"
-                                    stroke="#F97316"
+                                    stroke="#3B82F6"
                                     strokeWidth={1.5}
                                     dot={false}
                                     isAnimationActive={false}
@@ -235,7 +235,7 @@ export default function Test() {
                     </div>
 
                     <div className="flex items-center justify-between mt-4">
-                        <h4 className="px-4 py-1.5 bg-orange-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">EEG Power</h4>
+                        <h4 className="px-4 py-1.5 bg-blue-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">EEG Power</h4>
                     </div>
                     <div className="h-[200px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
@@ -245,7 +245,7 @@ export default function Test() {
                                     {spectrum.map((entry, index) => (
                                         <Cell
                                             key={`cell-${index}`}
-                                            fill={entry.val < 50 ? '#EF4444' : '#10B981'}
+                                            fill={entry.val < 50 ? '#FB923C' : '#10B981'}
                                         />
                                     ))}
                                 </Bar>
@@ -255,9 +255,9 @@ export default function Test() {
                 </div>
 
                 {/* Right: Indicators & Gauges */}
-                <div className="glass-card p-6 space-y-6 bg-orange-50/20">
+                <div className="glass-card p-6 space-y-6 bg-blue-50/20">
                     <div className="flex items-center justify-between">
-                        <h4 className="px-4 py-1.5 bg-orange-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">指標數值</h4>
+                        <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">指標數值</h4>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -266,9 +266,9 @@ export default function Test() {
                             <div className="relative w-24 h-24 flex items-center justify-center">
                                 <svg className="w-full h-full transform -rotate-90">
                                     <circle cx="48" cy="48" r="44" stroke="#e2e8f0" strokeWidth="8" fill="transparent" />
-                                    <circle cx="48" cy="48" r="44" stroke="#F97316" strokeWidth="8" fill="transparent" strokeDasharray={276} strokeDashoffset={276 - (276 * 66) / 100} strokeLinecap="round" />
+                                    <circle cx="48" cy="48" r="44" stroke="#3B82F6" strokeWidth="8" fill="transparent" strokeDasharray={276} strokeDashoffset={276 - (276 * 66) / 100} strokeLinecap="round" />
                                 </svg>
-                                <span className="absolute text-2xl font-black text-red-950">66</span>
+                                <span className="absolute text-2xl font-black text-slate-800">66</span>
                             </div>
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center italic mt-2">綜合情緒</span>
                         </div>
@@ -278,26 +278,26 @@ export default function Test() {
                             <div
                                 key={i}
                                 onClick={() => handleIndicatorClick(stat.val)}
-                                className={`glass-card p-4 flex flex-col items-center justify-center space-y-2 border-2 transition-all cursor-pointer ${stat.val < 50 ? 'border-red-100 hover:bg-red-50 animate-pulse' : 'border-white hover:bg-emerald-50'
+                                className={`glass-card p-4 flex flex-col items-center justify-center space-y-2 border-2 transition-all cursor-pointer ${stat.val < 50 ? 'border-orange-100 hover:bg-orange-50 animate-pulse' : 'border-white hover:bg-emerald-50'
                                     }`}
                             >
-                                <span className={`text-2xl font-black ${stat.val < 50 ? 'text-red-500' : 'text-red-950'}`}>{stat.val}</span>
+                                <span className={`text-2xl font-black ${stat.val < 50 ? 'text-orange-500' : 'text-slate-800'}`}>{stat.val}</span>
                                 <span className="text-[10px] font-bold text-slate-400 italic text-center uppercase tracking-widest">{stat.label}</span>
-                                {stat.val < 50 && <span className="text-[8px] font-black text-red-400 -mt-1">點擊調節</span>}
+                                {stat.val < 50 && <span className="text-[8px] font-black text-orange-400 -mt-1">點擊調節</span>}
                             </div>
                         ))}
                     </div>
 
                     <div className="flex flex-col items-center justify-center py-8 space-y-6">
-                        <div className="flex items-center gap-4 text-red-950">
-                            <Timer size={24} className="text-orange-600" />
+                        <div className="flex items-center gap-4 text-slate-800">
+                            <Timer size={24} className="text-blue-600" />
                             <span className="text-4xl font-black font-mono">{formatTime(timer)}</span>
                         </div>
 
                         {!isTesting ? (
                             <button
                                 onClick={() => { setIsTesting(true); setTimer(1800); setIsFinished(false); }}
-                                className="w-full py-5 bg-orange-600 text-white rounded-3xl font-black text-xl shadow-xl shadow-orange-200 hover:scale-105 transition-transform"
+                                className="w-full py-5 bg-blue-600 text-white rounded-3xl font-black text-xl shadow-xl shadow-blue-200 hover:scale-105 transition-transform"
                             >
                                 {isFinished ? '重新檢測' : '開始檢測'}
                             </button>

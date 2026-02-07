@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const mainBlocks = [
-    { id: 'connect', title: '連接腦機', sub: '核心檢測與實時監測', icon: LinkIcon, path: '/test', color: 'from-orange-600 to-red-600' },
+    { id: 'connect', title: '連接腦機', sub: '核心檢測與實時監測', icon: LinkIcon, path: '/test', color: 'from-blue-600 to-indigo-600' },
     { id: 'garden', title: '秘密花園', sub: '音頻、遊戲與心理調節', icon: Brain, path: '/garden', color: 'from-purple-600 to-pink-600' },
     { id: 'map', title: '心理地圖', sub: '健康日誌與趨勢分析', icon: Map, path: '/map', color: 'from-emerald-600 to-teal-600' },
     { id: 'profile', title: '個人信息', sub: '帳戶設置與個人數據', icon: User, path: '/profile', color: 'from-amber-600 to-orange-600' },
-    { id: 'mall', title: '健康商城', sub: '會員方案與福利購買', icon: ShoppingCart, path: '/mall', color: 'from-red-900 to-red-950' },
+    { id: 'mall', title: '健康商城', sub: '會員方案與福利購買', icon: ShoppingCart, path: '/mall', color: 'from-slate-800 to-slate-950' },
 ];
 
 export default function Home() {
@@ -19,14 +19,14 @@ export default function Home() {
                 <motion.h1
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-4xl sm:text-6xl font-black text-red-950 tracking-tight"
+                    className="text-4xl sm:text-6xl font-black text-slate-800 tracking-tight"
                 >
-                    Brain<span className="text-orange-600 italic">Fit</span>
+                    Brain<span className="text-blue-600 italic">Fit</span>
                 </motion.h1>
                 <p className="text-slate-500 font-bold max-w-lg mx-auto uppercase tracking-[0.3em] text-[10px] sm:text-xs">
                     Next-Gen Brain-Computer Interface Portal
                 </p>
-                <div className="w-12 h-1.5 bg-orange-600 mx-auto rounded-full mt-4" />
+                <div className="w-12 h-1.5 bg-blue-600 mx-auto rounded-full mt-4" />
             </div>
 
             {/* Hub Portal - Large Icons */}
@@ -47,24 +47,24 @@ export default function Home() {
                                 <block.icon size={idx === 0 ? 56 : 40} strokeWidth={2.5} />
                             </div>
                             <div className="flex-1 text-left space-y-2">
-                                <h3 className="text-2xl sm:text-4xl font-black text-red-950 group-hover:text-orange-600 transition-colors">
+                                <h3 className="text-2xl sm:text-4xl font-black text-slate-800 group-hover:text-blue-600 transition-colors">
                                     {block.title}
                                 </h3>
                                 <p className="text-slate-400 font-bold text-xs sm:text-sm uppercase tracking-widest">{block.sub}</p>
                             </div>
-                            <ChevronRight size={32} className="text-slate-200 group-hover:text-orange-600 transition-colors hidden sm:block" />
+                            <ChevronRight size={32} className="text-slate-200 group-hover:text-blue-600 transition-colors hidden sm:block" />
                         </Link>
 
                         {/* Decorative Background for first item */}
                         {idx === 0 && (
-                            <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-50/50 -skew-x-12 translate-x-12" />
+                            <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-50/50 -skew-x-12 translate-x-12" />
                         )}
                     </motion.div>
                 ))}
             </div>
 
             <footer className="text-center py-8">
-                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] text-red-950/20">Taiwan BCI Advanced Intelligence</p>
+                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em]">Taiwan BCI Advanced Intelligence</p>
             </footer>
         </div>
     );

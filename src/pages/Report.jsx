@@ -39,28 +39,28 @@ export default function Report() {
         <div className="space-y-10 pb-32 max-w-6xl mx-auto px-2">
 
             {/* Summary Header */}
-            <div className="bg-gradient-to-br from-red-900 to-red-950 p-10 sm:p-16 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#1e1b4b] to-[#312e81] p-10 sm:p-16 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-0 w-64 h-64 bg-orange-400 rounded-full blur-3xl" />
-                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-red-600 rounded-full blur-3xl" />
+                    <div className="absolute top-0 left-0 w-64 h-64 bg-blue-400 rounded-full blur-3xl" />
+                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-600 rounded-full blur-3xl" />
                 </div>
 
                 <div className="space-y-4 text-center md:text-left relative z-10">
                     <h1 className="text-4xl sm:text-5xl font-black tracking-tight italic">綜合腦健康報告</h1>
                     <div className="flex items-center justify-center md:justify-start gap-4">
                         <span className="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                            <ShieldCheck size={14} className="text-orange-400" /> 已驗證 • 真實數據
+                            <ShieldCheck size={14} className="text-blue-400" /> 已驗證 • 真實數據
                         </span>
-                        <span className="text-orange-200 text-xs font-bold font-mono">2026.02.07 18:24</span>
+                        <span className="text-blue-200 text-xs font-bold font-mono">2026.02.07 18:24</span>
                     </div>
                 </div>
 
                 <div className="relative flex flex-col items-center z-10">
                     <div className="w-40 h-40 rounded-full border-[12px] border-white/10 flex items-center justify-center relative">
-                        <div className="absolute inset-0 rounded-full border-[12px] border-orange-500 border-t-transparent animate-spin-slow" />
+                        <div className="absolute inset-0 rounded-full border-[12px] border-blue-500 border-t-transparent animate-spin-slow" />
                         <span className="text-6xl font-black">{REPORT_DATA.score}</span>
                     </div>
-                    <span className="mt-4 text-[10px] font-black uppercase tracking-[0.5em] text-orange-400">系統綜合評分</span>
+                    <span className="mt-4 text-[10px] font-black uppercase tracking-[0.5em] text-blue-400">系統綜合評分</span>
                 </div>
             </div>
 
@@ -68,10 +68,10 @@ export default function Report() {
                 {/* Detailed Analysis Table */}
                 <div className="lg:col-span-2 glass-card p-10 space-y-8">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-2xl font-black text-red-950 flex items-center gap-2 italic">
-                            <Activity size={24} className="text-orange-600" /> 詳細指標分析
+                        <h2 className="text-2xl font-black text-slate-800 flex items-center gap-2 italic">
+                            <Activity size={24} className="text-blue-600" /> 詳細指標分析
                         </h2>
-                        <button className="p-2 text-slate-400 hover:text-orange-600 transition-colors">
+                        <button className="p-2 text-slate-400 hover:text-blue-600 transition-colors">
                             <Download size={20} />
                         </button>
                     </div>
@@ -97,21 +97,21 @@ export default function Report() {
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.05 }}
                                         className={`group transition-colors rounded-2xl cursor-pointer ${ind.avg < 50
-                                                ? 'bg-red-50/50 hover:bg-red-100'
-                                                : 'bg-slate-50/50 hover:bg-orange-50'
+                                                ? 'bg-orange-50/50 hover:bg-orange-100'
+                                                : 'bg-slate-50/50 hover:bg-blue-50'
                                             }`}
                                         onClick={() => handleIndicatorClick(ind)}
                                     >
-                                        <td className="py-4 px-4 font-black text-red-950 rounded-l-2xl">{ind.label}</td>
+                                        <td className="py-4 px-4 font-black text-slate-700 rounded-l-2xl">{ind.label}</td>
                                         <td className="py-4 px-4 font-bold text-slate-400">{ind.range}</td>
                                         <td className="py-4 px-4 font-bold text-slate-600">{ind.min}</td>
                                         <td className="py-4 px-4 font-bold text-slate-600">{ind.max}</td>
-                                        <td className={`py-4 px-4 font-black ${ind.avg < 50 ? 'text-red-600 animate-pulse' : 'text-orange-600'}`}>{ind.avg}</td>
+                                        <td className={`py-4 px-4 font-black ${ind.avg < 50 ? 'text-orange-600 animate-pulse' : 'text-blue-600'}`}>{ind.avg}</td>
                                         <td className="py-4 px-4">
                                             <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase ${ind.avg < 50
-                                                    ? 'bg-red-100 text-red-700'
+                                                    ? 'bg-orange-100 text-orange-700'
                                                     : ind.status.includes('偏高') || ind.status.includes('較強') || ind.status.includes('較高')
-                                                        ? 'bg-orange-100 text-orange-700'
+                                                        ? 'bg-blue-100 text-blue-700'
                                                         : 'bg-emerald-100 text-emerald-700'
                                                 }`}>
                                                 {ind.avg < 50 ? '需調節' : ind.status}
@@ -135,7 +135,7 @@ export default function Report() {
                             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                                 <PolarGrid stroke="#e2e8f0" />
                                 <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} />
-                                <Radar name="腦狀態" dataKey="A" stroke="#F97316" fill="#F97316" fillOpacity={0.6} />
+                                <Radar name="腦狀態" dataKey="A" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
                             </RadarChart>
                         </ResponsiveContainer>
                     </div>
@@ -145,16 +145,16 @@ export default function Report() {
             {/* Bottom Section: Trend */}
             <div className="glass-card p-10 space-y-8">
                 <div className="flex items-center gap-2">
-                    <TrendingUp className="text-orange-600" />
-                    <h3 className="text-2xl font-black text-red-950 italic">近期情緒穩定趨勢</h3>
+                    <TrendingUp className="text-blue-600" />
+                    <h3 className="text-2xl font-black text-slate-800 italic">近期情緒穩定趨勢</h3>
                 </div>
                 <div className="h-64 sm:h-80 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={REPORT_DATA.trend}>
                             <defs>
                                 <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#F97316" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="#F97316" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
+                                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -163,14 +163,14 @@ export default function Report() {
                             <Tooltip
                                 contentStyle={{ borderRadius: '1.5rem', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 900 }}
                             />
-                            <Area type="monotone" dataKey="val" stroke="#F97316" strokeWidth={4} fillOpacity={1} fill="url(#colorVal)" />
+                            <Area type="monotone" dataKey="val" stroke="#3B82F6" strokeWidth={4} fillOpacity={1} fill="url(#colorVal)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
             <footer className="text-center pb-8 border-t border-slate-100 pt-8">
-                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] italic">Taiwan BCI Advanced Intelligence Report</p>
+                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em]">Taiwan BCI Advanced Intelligence Report</p>
             </footer>
         </div>
     );

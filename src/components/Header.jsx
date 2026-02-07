@@ -6,11 +6,11 @@ export default function Header() {
     return (
         <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-white/40 px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-red-950 text-white rounded-xl shadow-lg shadow-red-100">
-                    <Zap size={20} className="text-orange-400" />
+                <div className="p-2.5 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-100">
+                    <Zap size={20} className="text-blue-400" />
                 </div>
                 <div>
-                    <h1 className="text-xl font-black text-red-950 italic">Brain<span className="text-orange-600">Fit</span></h1>
+                    <h1 className="text-xl font-black text-slate-800 italic">Brain<span className="text-blue-600">Fit</span></h1>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest -mt-1">BCI Intelligence</p>
                 </div>
             </div>
