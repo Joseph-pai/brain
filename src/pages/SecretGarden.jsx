@@ -103,6 +103,19 @@ export default function SecretGarden() {
         }
     };
 
+    const playTrack = (track) => {
+        if (isSelecting) {
+            toggleSelect(track.id);
+            return;
+        }
+        if (currentTrack?.id === track.id) {
+            setIsPlaying(!isPlaying);
+        } else {
+            setCurrentTrack(track);
+            setIsPlaying(true);
+        }
+    };
+
     const saveTrackName = () => {
         if (!editingTrack) return;
         setMusicList(prev => prev.map(t => t.id === editingTrack.id ? { ...t, name: editName } : t));
@@ -179,7 +192,7 @@ export default function SecretGarden() {
                         onClick={() => fileInputRef.current?.click()}
                         className="p-3 bg-emerald-600 text-white shadow-xl shadow-emerald-100 rounded-2xl hover:bg-emerald-700 transition-colors"
                     >
-                        <Upload size={20} />
+                        <Plus size={20} />
                     </button>
                 </div>
             </div>
@@ -200,55 +213,71 @@ export default function SecretGarden() {
                 </motion.div>
             )}
 
-            <div className="space-y-4">
+            <Reorder.Group axis="y" values={musicList} onReorder={setMusicList} className="space-y-4">
                 {musicList.length === 0 && (
                     <div className="h-64 flex flex-col items-center justify-center glass-card border-dashed border-2 border-slate-200 text-slate-300 gap-4">
                         <Music size={48} className="opacity-20" />
-                        <p className="font-black italic">點擊右上方上傳圖標添加本地音樂</p>
+                        <p className="font-black italic">點擊右上方 “+” 添加本地音樂</p>
                     </div>
                 )}
                 {musicList.map((track) => (
-                    <motion.div
+                    <Reorder.Item
                         key={track.id}
-                        layout
-                        onClick={() => playTrack(track)}
-                        className={`glass-card p-6 flex items-center justify-between group cursor-pointer transition-all border-2 ${currentTrack?.id === track.id ? 'border-emerald-200 bg-emerald-50/30' :
-                            selectedMusic.includes(track.id) ? 'border-orange-200 bg-orange-50/30' : 'border-transparent hover:border-blue-100'
-                            }`}
+                        value={track}
+                        className="relative"
                     >
-                        <div className="flex items-center gap-6">
-                            <div className="relative">
-                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${currentTrack?.id === track.id ? 'bg-emerald-600 text-white' : 'bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white'
-                                    }`}>
-                                    {currentTrack?.id === track.id && isPlaying ? (
-                                        <div className="flex gap-1 items-end h-6">
-                                            {[1, 2, 3].map(i => (
-                                                <motion.div
-                                                    key={i}
-                                                    animate={{ height: [8, 20, 10, 24, 12, 18, 8] }}
-                                                    transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
-                                                    className="w-1 bg-white rounded-full"
-                                                />
-                                            ))}
-                                        </div>
-                                    ) : <Play size={24} fill={currentTrack?.id === track.id ? 'currentColor' : 'none'} />}
+                        <motion.div
+                            layout
+                            onClick={() => playTrack(track)}
+                            className={`glass-card p-6 flex items-center justify-between group cursor-pointer transition-all border-2 ${currentTrack?.id === track.id ? 'border-emerald-200 bg-emerald-50/30' :
+                                selectedMusic.includes(track.id) ? 'border-orange-200 bg-orange-50/30' : 'border-transparent hover:border-blue-100'
+                                }`}
+                        >
+                            <div className="flex items-center gap-6 flex-1">
+                                <div className="cursor-grab active:cursor-grabbing p-1 text-slate-300 hover:text-slate-500 transition-colors">
+                                    <GripVertical size={20} />
                                 </div>
-                                {isSelecting && (
-                                    <div className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${selectedMusic.includes(track.id) ? 'bg-orange-500 border-white text-white' : 'bg-white border-slate-200 text-slate-200'
+                                <div className="relative">
+                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${currentTrack?.id === track.id ? 'bg-emerald-600 text-white' : 'bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white'
                                         }`}>
-                                        <Check size={14} strokeWidth={4} />
+                                        {currentTrack?.id === track.id && isPlaying ? (
+                                            <div className="flex gap-1 items-end h-6">
+                                                {[1, 2, 3].map(i => (
+                                                    <motion.div
+                                                        key={i}
+                                                        animate={{ height: [8, 20, 10, 24, 12, 18, 8] }}
+                                                        transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
+                                                        className="w-1 bg-white rounded-full"
+                                                    />
+                                                ))}
+                                            </div>
+                                        ) : <Play size={24} fill={currentTrack?.id === track.id ? 'currentColor' : 'none'} />}
                                     </div>
-                                )}
+                                    {isSelecting && (
+                                        <div className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${selectedMusic.includes(track.id) ? 'bg-orange-500 border-white text-white' : 'bg-white border-slate-200 text-slate-200'
+                                            }`}>
+                                            <Check size={14} strokeWidth={4} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className={`font-black text-lg ${currentTrack?.id === track.id ? 'text-emerald-700' : 'text-slate-800'} truncate max-w-[200px]`}>{track.name}</h4>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest truncate">{track.sub}</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 className={`font-black text-lg ${currentTrack?.id === track.id ? 'text-emerald-700' : 'text-slate-800'}`}>{track.name}</h4>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{track.sub}</p>
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setEditingTrack(track); setEditName(track.name); }}
+                                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
+                                >
+                                    <Edit2 size={18} />
+                                </button>
+                                <Volume2 size={24} className={currentTrack?.id === track.id ? 'text-emerald-600' : 'text-slate-200 group-hover:text-blue-600'} />
                             </div>
-                        </div>
-                        <Volume2 size={24} className={currentTrack?.id === track.id ? 'text-emerald-600' : 'text-slate-200 group-hover:text-blue-600'} />
-                    </motion.div>
+                        </motion.div>
+                    </Reorder.Item>
                 ))}
-            </div>
+            </Reorder.Group>
 
             {/* Sticky Player Bar */}
             <AnimatePresence>
@@ -284,6 +313,43 @@ export default function SecretGarden() {
                             <button className="text-slate-300 hover:text-slate-600"><SkipForward size={24} /></button>
                         </div>
                     </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Editing Modal */}
+            <AnimatePresence>
+                {editingTrack && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="glass-card w-full max-w-sm p-8 space-y-6"
+                        >
+                            <h3 className="text-2xl font-black text-slate-800">修改名稱</h3>
+                            <input
+                                type="text"
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                                className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-500 outline-none font-bold transition-all"
+                                autoFocus
+                            />
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => setEditingTrack(null)}
+                                    className="flex-1 p-4 bg-slate-100 text-slate-400 rounded-xl font-black uppercase tracking-widest hover:bg-slate-200 transition-colors"
+                                >
+                                    取消
+                                </button>
+                                <button
+                                    onClick={saveTrackName}
+                                    className="flex-1 p-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-colors"
+                                >
+                                    保存
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </div>
