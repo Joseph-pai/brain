@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Bluetooth, Activity, ShieldCheck, Timer, Zap, Brain, Sliders, Battery, Signal, ChevronRight, X, Heart, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, Radar as RadarComponent, Tooltip } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip } from 'recharts';
 import { generateWaveformData } from '../utils/mockData';
 import { useNavigate } from 'react-router-dom';
 
@@ -196,7 +196,7 @@ export default function Test() {
                                                             axisLine={false}
                                                             tickCount={6}
                                                         />
-                                                        <RadarComponent name="Result" dataKey="val" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
+                                                        <Radar name="Result" dataKey="val" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
                                                     </RadarChart>
                                                 </ResponsiveContainer>
                                             </div>
@@ -215,7 +215,7 @@ export default function Test() {
                                                             axisLine={false}
                                                             tickCount={6}
                                                         />
-                                                        <RadarComponent name="Result" dataKey="val" stroke="#FB7185" fill="#FB7185" fillOpacity={0.6} />
+                                                        <Radar name="Result" dataKey="val" stroke="#FB7185" fill="#FB7185" fillOpacity={0.6} />
                                                     </RadarChart>
                                                 </ResponsiveContainer>
                                             </div>
