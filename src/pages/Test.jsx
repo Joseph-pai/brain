@@ -87,7 +87,7 @@ export default function Test() {
                     return [...prev.slice(1), latestPoint];
                 });
 
-                setSpectrum(prev => generateSpectrum(latestPoint));
+                setSpectrum(prev => generateSpectrum(latestPoint, false));
 
                 setTimer(t => {
                     if (t <= 1) {
@@ -452,11 +452,28 @@ export default function Test() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div className="col-span-2 sm:col-span-1 glass-card p-4 flex flex-col items-center justify-center space-y-4">
                             <div className="relative w-24 h-24 flex items-center justify-center">
-                                <svg className="w-full h-full transform -rotate-90">
-                                    <circle cx="48" cy="48" r="44" stroke="#e2e8f0" strokeWidth="8" fill="transparent" />
-                                    <circle cx="48" cy="48" r="44" stroke="#0D9488" strokeWidth="8" fill="transparent" strokeDasharray={276} strokeDashoffset={276 - (276 * 85) / 100} strokeLinecap="round" />
-                                </svg>
-                                <span className="absolute text-2xl font-black text-slate-800">85</span>
+                                {(() => {
+                                    const overallScore = Math.floor(stats.reduce((acc, s) => acc + s.val, 0) / stats.length);
+                                    const circumference = 276;
+                                    const offset = circumference - (circumference * overallScore) / 100;
+                                    return (
+                                        <>
+                                            <svg className="w-full h-full transform -rotate-90">
+                                                <circle cx="48" cy="48" r="44" stroke="#e2e8f0" strokeWidth="8" fill="transparent" />
+                                                <circle
+                                                    cx="48" cy="48" r="44"
+                                                    stroke={overallScore > 0 ? "#0D9488" : "#e2e8f0"}
+                                                    strokeWidth="8" fill="transparent"
+                                                    strokeDasharray={circumference}
+                                                    strokeDashoffset={offset}
+                                                    strokeLinecap="round"
+                                                    className="transition-all duration-500"
+                                                />
+                                            </svg>
+                                            <span className="absolute text-2xl font-black text-slate-800">{overallScore}</span>
+                                        </>
+                                    );
+                                })()}
                             </div>
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center italic mt-2">綜合狀態</span>
                         </div>
