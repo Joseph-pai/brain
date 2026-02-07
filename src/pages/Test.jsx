@@ -23,21 +23,21 @@ const BANDS = [
     { id: 'stress', label: 'Stress' }
 ];
 
-const generateRawSignal = (length = 100) => {
+const generateRawSignal = (length = 100, isZero = true) => {
     return Array.from({ length }, (_, i) => ({
         time: i,
-        delta: 25 + Math.random() * 74,
-        theta: 25 + Math.random() * 74,
-        alpha: 25 + Math.random() * 74,
-        beta: 25 + Math.random() * 74,
-        gamma: 25 + Math.random() * 74,
-        stress: 25 + Math.random() * 74
+        delta: isZero ? 0 : 25 + Math.random() * 74,
+        theta: isZero ? 0 : 25 + Math.random() * 74,
+        alpha: isZero ? 0 : 25 + Math.random() * 74,
+        beta: isZero ? 0 : 25 + Math.random() * 74,
+        gamma: isZero ? 0 : 25 + Math.random() * 74,
+        stress: isZero ? 0 : 25 + Math.random() * 74
     }));
 };
 
-const generateSpectrum = (latestData = null) => {
-    if (!latestData) {
-        return BANDS.map(b => ({ name: b.label, id: b.id, val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS[b.id] }));
+const generateSpectrum = (latestData = null, isZero = true) => {
+    if (!latestData || isZero) {
+        return BANDS.map(b => ({ name: b.label, id: b.id, val: 0, color: WAVE_COLORS[b.id] }));
     }
     return BANDS.map(b => ({
         name: b.label,
@@ -50,23 +50,22 @@ const generateSpectrum = (latestData = null) => {
 export default function Test() {
     const navigate = useNavigate();
     const [isConnected, setIsConnected] = useState(false);
+    const [searchState, setSearchState] = useState('idle'); // 'idle', 'searching', 'list', 'connecting', 'success'
+    const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [isTesting, setIsTesting] = useState(false);
     const [isFinished, setIsFinished] = useState(false);
-    const [rawSignal, setRawSignal] = useState(generateRawSignal());
-    const [spectrum, setSpectrum] = useState(generateSpectrum());
+    const [rawSignal, setRawSignal] = useState(generateRawSignal(100, true));
+    const [spectrum, setSpectrum] = useState(generateSpectrum(null, true));
     const [activeWave, setActiveWave] = useState('delta');
     const [timer, setTimer] = useState(1800); // 180.0 seconds (3 minutes)
 
-    // Split into Positive and Negative groups
     const [stats, setStats] = useState([
-        // Group 1: Positive (Higher is Better, Alert < 50)
-        { label: '放鬆度', val: 56, id: 'relaxation', group: 'pos' },
-        { label: '專注度', val: 69, id: 'focus', group: 'pos' },
-        { label: '心流指標', val: 71, id: 'flow', group: 'pos' },
-        // Group 2: Negative (Lower is Better, Alert > 50)
-        { label: '疲勞度', val: 37, id: 'fatigue', group: 'neg' },
-        { label: '壓力指數', val: 48, id: 'stress', group: 'neg' },
-        { label: '焦慮指數', val: 38, id: 'anxiety', group: 'neg' }
+        { label: '放鬆度', val: 0, id: 'relaxation', group: 'pos' },
+        { label: '專注度', val: 0, id: 'focus', group: 'pos' },
+        { label: '心流指標', val: 0, id: 'flow', group: 'pos' },
+        { label: '疲勞度', val: 0, id: 'fatigue', group: 'neg' },
+        { label: '壓力指數', val: 0, id: 'stress', group: 'neg' },
+        { label: '焦慮指數', val: 0, id: 'anxiety', group: 'neg' }
     ]);
 
     useEffect(() => {
@@ -122,16 +121,34 @@ export default function Test() {
     };
 
     const handleIndicatorClick = (stat, path = '/garden') => {
-        if (isAlert(stat)) {
+        if (isAlert(stat) && stat.val > 0) {
             navigate(path);
         }
+    };
+
+    const startSearch = () => {
+        setSearchState('searching');
+        setTimeout(() => setSearchState('list'), 2000);
+    };
+
+    const connectToDevice = (id) => {
+        setSelectedDeviceId(id);
+        setSearchState('connecting');
+        setTimeout(() => {
+            setSearchState('success');
+            setTimeout(() => {
+                setIsConnected(true);
+                setSearchState('idle');
+            }, 1500);
+        }, 1500);
     };
 
     if (!isConnected) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8 px-2">
                 <motion.div
-                    whileHover={{ scale: 1.05 }}
+                    animate={searchState === 'searching' ? { scale: [1, 1.1, 1], opacity: [1, 0.5, 1] } : {}}
+                    transition={{ repeat: Infinity, duration: 2 }}
                     className="w-48 h-48 bg-blue-600 rounded-[3rem] flex items-center justify-center text-white shadow-2xl shadow-blue-200"
                 >
                     <Bluetooth size={80} />
@@ -141,11 +158,77 @@ export default function Test() {
                     <p className="text-slate-400 font-medium max-w-sm">請確保您的腦機設備已開啟並處於配對模式。</p>
                 </div>
                 <button
-                    onClick={() => setIsConnected(true)}
+                    onClick={startSearch}
                     className="px-12 py-5 bg-blue-600 text-white rounded-[2rem] font-black text-xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all"
                 >
                     立即連接設備
                 </button>
+
+                {/* Connection Flow Modal */}
+                <AnimatePresence>
+                    {searchState !== 'idle' && (
+                        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                className="glass-card w-full max-w-sm p-8 space-y-6 text-center"
+                            >
+                                {searchState === 'searching' && (
+                                    <div className="space-y-6">
+                                        <div className="flex justify-center">
+                                            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                        </div>
+                                        <h3 className="text-2xl font-black text-slate-800">搜尋設備中...</h3>
+                                        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Searching for Bluetooth signals</p>
+                                    </div>
+                                )}
+
+                                {searchState === 'list' && (
+                                    <div className="space-y-6">
+                                        <h3 className="text-2xl font-black text-slate-800">搜尋到設備</h3>
+                                        <div className="space-y-3">
+                                            {['BrainFit-X1 (ID: 72A)', 'NeuroLink-V2 (ID: 9B3)', 'SenseLink (ID: 4F1)'].map((name, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => connectToDevice(name)}
+                                                    className="w-full p-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 text-slate-600 rounded-2xl font-black transition-all flex justify-between items-center"
+                                                >
+                                                    {name} <ChevronRight size={18} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <button onClick={() => setSearchState('idle')} className="text-slate-300 font-black text-xs uppercase tracking-widest hover:text-slate-500">取消</button>
+                                    </div>
+                                )}
+
+                                {searchState === 'connecting' && (
+                                    <div className="space-y-6">
+                                        <div className="flex justify-center">
+                                            <div className="w-16 h-16 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                                        </div>
+                                        <h3 className="text-2xl font-black text-slate-800">正在連接 {selectedDeviceId}</h3>
+                                        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest font-mono">Handshake in progress...</p>
+                                    </div>
+                                )}
+
+                                {searchState === 'success' && (
+                                    <div className="space-y-6">
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center text-white mx-auto shadow-lg shadow-emerald-100"
+                                        >
+                                            <ShieldCheck size={48} />
+                                        </motion.div>
+                                        <h3 className="text-2xl font-black text-slate-800">連接成功</h3>
+                                        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Connection established</p>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
             </div>
         );
     }
@@ -403,10 +486,16 @@ export default function Test() {
 
                         {!isTesting ? (
                             <button
-                                onClick={() => { setIsTesting(true); setTimer(1800); setIsFinished(false); }}
+                                onClick={() => {
+                                    setIsTesting(true);
+                                    setTimer(1800);
+                                    setIsFinished(false);
+                                    // Initialize with some base values immediately if starting
+                                    setStats(prev => prev.map(s => ({ ...s, val: 30 + Math.floor(Math.random() * 40) })));
+                                }}
                                 className="w-full py-5 bg-blue-600 text-white rounded-3xl font-black text-xl shadow-xl shadow-blue-200 hover:scale-105 transition-transform"
                             >
-                                {isFinished ? '重新檢測' : '開始檢測'}
+                                {isFinished || (stats[0].val > 0) ? '重新檢測' : '開始檢測'}
                             </button>
                         ) : (
                             <button
