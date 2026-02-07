@@ -221,13 +221,18 @@ export default function PsychMap() {
     );
 
     const renderCalendar = () => {
-        const days = Array.from({ length: 35 }, (_, i) => i - 4); // Simple mock April 2026
+        // Mocking for Feb 2026 (Starts on Sunday)
+        const days = Array.from({ length: 35 }, (_, i) => i + 1);
+
+        // Filter history reports with score < 50
+        const lowScoreReports = MOCK_HISTORY_DATA.filter(r => r.score < 50);
+
         return (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
                 {renderHeader('健康日曆', CalendarIcon)}
                 <div className="glass-card p-8 bg-white border-2 border-slate-50">
                     <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-xl font-black text-slate-800">2026年 4月</h3>
+                        <h3 className="text-xl font-black text-slate-800">2026年 2月</h3>
                         <div className="flex gap-2">
                             <button className="p-2 bg-slate-50 rounded-lg"><ChevronLeft size={16} /></button>
                             <button className="p-2 bg-slate-50 rounded-lg"><ChevronRight size={16} /></button>
@@ -237,20 +242,51 @@ export default function PsychMap() {
                         {['週日', '週一', '週二', '週三', '週四', '週五', '週六'].map(d => (
                             <div key={d} className="bg-slate-50 p-4 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">{d}</div>
                         ))}
-                        {days.map((d, i) => (
-                            <div key={i} className={`bg-white h-24 sm:h-32 p-4 relative border-t border-l border-slate-50 ${d <= 0 || d > 30 ? 'bg-slate-50/30' : ''}`}>
-                                <span className={`text-xs font-bold ${d <= 0 || d > 30 ? 'text-slate-300' : 'text-slate-800'}`}>{d > 0 && d <= 30 ? d : ''}</span>
-                                {d === 7 && (
-                                    <div className="absolute inset-0 m-2 mt-8 bg-blue-600/10 rounded-xl p-2 border border-blue-200">
-                                        <div className="w-1 h-full bg-blue-600 rounded-full float-left mr-2" />
-                                        <p className="text-[8px] font-black text-blue-700 leading-tight">腦神經檢測 (Score: 88)</p>
-                                    </div>
-                                )}
-                                {d === 15 && (
-                                    <div className="absolute bottom-2 right-2 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                                )}
-                            </div>
-                        ))}
+                        {days.map((d, i) => {
+                            // Match day with historical reports (e.g., 2026.02.05)
+                            const reportForDay = lowScoreReports.find(r => {
+                                const reportDay = parseInt(r.date.split('.')[2]);
+                                return reportDay === d;
+                            });
+
+                            return (
+                                <div key={i} className={`bg-white h-24 sm:h-32 p-4 relative border-t border-l border-slate-50 ${d > 28 ? 'bg-slate-50/30' : ''}`}>
+                                    <span className={`text-xs font-bold ${d > 28 ? 'text-slate-300' : 'text-slate-800'}`}>{d <= 28 ? d : ''}</span>
+
+                                    {/* Display Low Score Report Alert */}
+                                    {d <= 28 && reportForDay && (
+                                        <motion.div
+                                            initial={{ scale: 0.9, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            onClick={() => {
+                                                setSelectedReportId(reportForDay.id);
+                                                setActiveModule('history');
+                                            }}
+                                            className="absolute inset-0 m-2 mt-8 bg-rose-500/10 rounded-xl p-2 border border-rose-200 cursor-pointer hover:bg-rose-500/20 transition-colors"
+                                        >
+                                            <div className="w-1 h-full bg-rose-600 rounded-full float-left mr-2" />
+                                            <p className="text-[8px] font-black text-rose-700 leading-tight">風險告警</p>
+                                            <p className="text-[10px] font-black text-rose-600 mt-1">得分: {reportForDay.score}</p>
+                                        </motion.div>
+                                    )}
+
+                                    {/* Other mock indicators (optional) */}
+                                    {d === 7 && (
+                                        <div className="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full" title="今日測試已完成" />
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="mt-8 flex items-center gap-6">
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-rose-500 rounded-full" />
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">異常評測 (&lt; 50分)</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-emerald-500 rounded-full" />
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">檢測完成</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -306,8 +342,8 @@ export default function PsychMap() {
             })}
 
             <div className={`bg-gradient-to-br p-12 rounded-[3rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl overflow-hidden relative ${report.score >= 80 ? 'from-[#064e3b] to-[#065f46]' :
-                    report.score >= 60 ? 'from-[#1e1b4b] to-[#312e81]' :
-                        'from-[#7f1d1d] to-[#991b1b]'
+                report.score >= 60 ? 'from-[#1e1b4b] to-[#312e81]' :
+                    'from-[#7f1d1d] to-[#991b1b]'
                 }`}>
                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                     <div className="absolute top-0 left-0 w-64 h-64 bg-blue-400 rounded-full blur-3xl" />
@@ -384,8 +420,8 @@ export default function PsychMap() {
                                 <h4 className="font-black text-slate-800 text-lg">{item.date.split(' ')[0]} 測評報告</h4>
                                 <div className="flex items-center gap-3 mt-1">
                                     <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${item.score >= 80 ? 'text-emerald-600 bg-emerald-50' :
-                                            item.score >= 60 ? 'text-blue-600 bg-blue-50' :
-                                                'text-rose-600 bg-rose-50'
+                                        item.score >= 60 ? 'text-blue-600 bg-blue-50' :
+                                            'text-rose-600 bg-rose-50'
                                         }`}>綜合得分: {item.score}</span>
                                     <span className="text-[10px] font-black text-slate-300 uppercase italic">ID: 0x{item.id}</span>
                                 </div>
