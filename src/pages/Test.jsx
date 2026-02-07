@@ -1,25 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Bluetooth, Activity, ShieldCheck, Timer, Zap, Brain, Sliders, Battery, Signal, ChevronRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, Radar as RadarComponent } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, BarChart, Bar, Cell, Radar, RadarChart, PolarGrid, PolarAngleAxis, Radar as RadarComponent, Tooltip } from 'recharts';
 import { generateWaveformData } from '../utils/mockData';
 import { useNavigate } from 'react-router-dom';
+
+const WAVE_COLORS = {
+    delta: '#1E1B4B',
+    theta: '#F59E0B',
+    alpha: '#10B981',
+    beta: '#3B82F6',
+    gamma: '#8B5CF6',
+    stress: '#FB7185'
+};
 
 const generateRawSignal = (length = 100) => {
     return Array.from({ length }, (_, i) => ({
         time: i,
-        val: Math.sin(i * 0.2) * 0.005 + (Math.random() - 0.5) * 0.003
+        delta: 25 + Math.random() * 74,
+        theta: 25 + Math.random() * 74,
+        alpha: 25 + Math.random() * 74,
+        beta: 25 + Math.random() * 74,
+        gamma: 25 + Math.random() * 74,
+        stress: 25 + Math.random() * 74
     }));
 };
 
 const generateSpectrum = () => {
     return [
-        { name: 'Theta', val: Math.floor(Math.random() * 100) },
-        { name: 'L-Alpha', val: Math.floor(Math.random() * 100) },
-        { name: 'H-Alpha', val: Math.floor(Math.random() * 100) },
-        { name: 'L-Beta', val: Math.floor(Math.random() * 100) },
-        { name: 'H-Beta', val: Math.floor(Math.random() * 100) },
-        { name: 'L-Gamma', val: Math.floor(Math.random() * 100) },
+        { name: 'Delta', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.delta },
+        { name: 'Theta', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.theta },
+        { name: 'Alpha', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.alpha },
+        { name: 'Beta', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.beta },
+        { name: 'Gamma', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.gamma },
+        { name: 'Stress', val: Math.floor(25 + Math.random() * 74), color: WAVE_COLORS.stress },
     ];
 };
 
@@ -44,7 +58,19 @@ export default function Test() {
         let interval;
         if (isTesting && timer > 0) {
             interval = setInterval(() => {
-                setRawSignal(prev => [...prev.slice(2), ...generateRawSignal(2)]);
+                setRawSignal(prev => {
+                    const nextTime = (prev[prev.length - 1]?.time || 0) + 1;
+                    const newData = {
+                        time: nextTime,
+                        delta: 25 + Math.random() * 74,
+                        theta: 25 + Math.random() * 74,
+                        alpha: 25 + Math.random() * 74,
+                        beta: 25 + Math.random() * 74,
+                        gamma: 25 + Math.random() * 74,
+                        stress: 25 + Math.random() * 74
+                    };
+                    return [...prev.slice(1), newData];
+                });
                 setSpectrum(generateSpectrum());
                 setTimer(t => {
                     if (t <= 1) {
@@ -55,7 +81,6 @@ export default function Test() {
                     return t - 1;
                 });
 
-                // Slowly fluctuate stats for "live" feel
                 setStats(prev => prev.map(s => ({
                     ...s,
                     val: Math.max(10, Math.min(100, s.val + (Math.random() > 0.5 ? 1 : -1)))
@@ -104,7 +129,6 @@ export default function Test() {
     return (
         <div className="space-y-6 pb-20 max-w-6xl mx-auto px-2 relative">
 
-            {/* Completion Report Overlay */}
             <AnimatePresence>
                 {isFinished && (
                     <motion.div
@@ -129,7 +153,6 @@ export default function Test() {
 
                             <div className="flex-1 overflow-y-auto p-8 space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {/* Radar Chart */}
                                     <div className="glass-card p-6 flex flex-col items-center justify-center">
                                         <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">腦電評測維度</h3>
                                         <div className="w-full h-[250px]">
@@ -143,7 +166,6 @@ export default function Test() {
                                         </div>
                                     </div>
 
-                                    {/* 6 Indicators */}
                                     <div className="grid grid-cols-2 gap-4">
                                         {stats.map((s) => (
                                             <div
@@ -162,7 +184,6 @@ export default function Test() {
                                     </div>
                                 </div>
 
-                                {/* Analysis */}
                                 <div className="glass-card p-8 bg-blue-50/50 border-2 border-blue-100/50">
                                     <h4 className="flex items-center gap-2 text-xl font-black text-slate-800 mb-4 italic">
                                         <Brain size={24} className="text-blue-600" />
@@ -187,7 +208,6 @@ export default function Test() {
                 )}
             </AnimatePresence>
 
-            {/* Top Device Status Bar */}
             <div className="glass-card p-4 flex flex-wrap items-center justify-between gap-4 border-2 border-blue-50/50">
                 <div className="flex items-center gap-4">
                     <div className="p-3 bg-blue-600 text-white rounded-2xl">
@@ -210,43 +230,48 @@ export default function Test() {
                 </div>
             </div>
 
-            {/* Dashboard Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                {/* Left: Raw Signal Wave */}
                 <div className="glass-card p-6 space-y-6">
                     <div className="flex items-center justify-between">
-                        <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">原始信號波</h4>
+                        <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">多頻段原始信號 (25-99)</h4>
                     </div>
-                    <div className="h-[200px] w-full border-b border-slate-100">
+                    <div className="h-[300px] w-full border-b border-slate-100">
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={rawSignal}>
-                                <Line
-                                    type="monotone"
-                                    dataKey="val"
-                                    stroke="#3B82F6"
-                                    strokeWidth={1.5}
-                                    dot={false}
-                                    isAnimationActive={false}
+                            <LineChart data={rawSignal} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <XAxis
+                                    dataKey="time"
+                                    label={{ value: 'Time (s)', position: 'insideBottom', offset: -10, fontSize: 10, fontWeight: 800 }}
+                                    tick={{ fontSize: 9, fill: '#94a3b8' }}
                                 />
-                                <YAxis hide domain={[-0.015, 0.015]} />
+                                <YAxis
+                                    domain={[0, 110]}
+                                    label={{ value: 'Amp', angle: -90, position: 'insideLeft', fontSize: 10, fontWeight: 800 }}
+                                    tick={{ fontSize: 9, fill: '#94a3b8' }}
+                                />
+                                <Tooltip contentStyle={{ borderRadius: '1rem', border: 'none', shadow: 'none', fontWeight: 900, fontSize: '10px' }} />
+                                <Line type="monotone" dataKey="delta" stroke={WAVE_COLORS.delta} strokeWidth={2} dot={false} isAnimationActive={false} />
+                                <Line type="monotone" dataKey="theta" stroke={WAVE_COLORS.theta} strokeWidth={2} dot={false} isAnimationActive={false} />
+                                <Line type="monotone" dataKey="alpha" stroke={WAVE_COLORS.alpha} strokeWidth={2} dot={false} isAnimationActive={false} />
+                                <Line type="monotone" dataKey="beta" stroke={WAVE_COLORS.beta} strokeWidth={2} dot={false} isAnimationActive={false} />
+                                <Line type="monotone" dataKey="gamma" stroke={WAVE_COLORS.gamma} strokeWidth={2} dot={false} isAnimationActive={false} />
+                                <Line type="monotone" dataKey="stress" stroke={WAVE_COLORS.stress} strokeWidth={2} dot={false} isAnimationActive={false} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
 
                     <div className="flex items-center justify-between mt-4">
-                        <h4 className="px-4 py-1.5 bg-blue-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">EEG Power</h4>
+                        <h4 className="px-4 py-1.5 bg-blue-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">EEG Power Distribution</h4>
                     </div>
                     <div className="h-[200px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={spectrum}>
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 800 }} />
+                                <YAxis hide domain={[0, 100]} />
                                 <Bar dataKey="val" radius={[4, 4, 0, 0]}>
                                     {spectrum.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={entry.val < 50 ? '#FB923C' : '#10B981'}
-                                        />
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
                                 </Bar>
                             </BarChart>
@@ -254,14 +279,12 @@ export default function Test() {
                     </div>
                 </div>
 
-                {/* Right: Indicators & Gauges */}
                 <div className="glass-card p-6 space-y-6 bg-blue-50/20">
                     <div className="flex items-center justify-between">
                         <h4 className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">指標數值</h4>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        {/* Summary Gauge */}
                         <div className="col-span-2 sm:col-span-1 glass-card p-4 flex flex-col items-center justify-center space-y-4">
                             <div className="relative w-24 h-24 flex items-center justify-center">
                                 <svg className="w-full h-full transform -rotate-90">
@@ -273,7 +296,6 @@ export default function Test() {
                             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center italic mt-2">綜合情緒</span>
                         </div>
 
-                        {/* Smaller Indicators */}
                         {stats.slice(0, 5).map((stat, i) => (
                             <div
                                 key={i}
