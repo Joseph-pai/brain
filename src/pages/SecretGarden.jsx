@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Music, Gamepad, BookOpen, Video, Palette, Play, ChevronRight, Zap, Target, Wind, Coffee, Brain } from 'lucide-react';
+import { Music, Gamepad, BookOpen, Video, Palette, Play, ChevronRight, Zap, Target, Wind, Coffee, Palmtree } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
@@ -59,7 +59,7 @@ export default function SecretGarden() {
     const activeItems = CONTENT_LIBRARY[activeTab]?.[mode] || CONTENT_LIBRARY[activeTab]?.default || [];
 
     return (
-        <div className="space-y-8 pb-32 max-w-5xl mx-auto px-2">
+        <div className="space-y-8 pb-32 max-w-5xl mx-auto px-2 pt-6">
 
             {/* Operational Feedback Overlay */}
             <AnimatePresence>
@@ -68,7 +68,7 @@ export default function SecretGarden() {
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 50 }}
-                        className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 font-black"
+                        className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-[150] flex items-center gap-3 font-black"
                     >
                         <Zap size={20} className="text-amber-400 animate-pulse" />
                         正在為您開啟：{operatingItem} ...
@@ -77,9 +77,9 @@ export default function SecretGarden() {
             </AnimatePresence>
 
             {/* Header */}
-            <div className="flex items-center gap-6 px-4">
+            <div className="flex items-center gap-6 px-4 mb-4">
                 <div className="p-4 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-[2rem] shadow-xl shadow-pink-100 italic">
-                    <Brain size={40} />
+                    <Palmtree size={40} />
                 </div>
                 <div className="space-y-1">
                     <h1 className="text-4xl font-black text-slate-800 tracking-tight">秘密調節花園</h1>
@@ -88,36 +88,38 @@ export default function SecretGarden() {
             </div>
 
             {/* Smart Routing Hint */}
-            <AnimatePresence>
-                {mode && !operatingItem && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="bg-blue-600 rounded-[2rem] p-6 text-white flex items-center justify-between shadow-xl shadow-blue-100"
-                    >
-                        <div className="flex items-center gap-4">
-                            <div className="p-2 bg-white/20 rounded-xl">
-                                <Zap size={20} className="text-amber-400" />
+            <div className="px-4">
+                <AnimatePresence>
+                    {mode && !operatingItem && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="bg-blue-600 rounded-[2rem] p-6 text-white flex items-center justify-between shadow-xl shadow-blue-100 mb-6"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 bg-white/20 rounded-xl">
+                                    <Zap size={20} className="text-amber-400" />
+                                </div>
+                                <div>
+                                    <h4 className="font-black">推薦模式：{MODE_LABELS[mode] || mode}</h4>
+                                    <p className="text-xs text-blue-100 font-bold">已根據您的測評結果自動過濾內容</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 className="font-black">推薦模式：{MODE_LABELS[mode] || mode}</h4>
-                                <p className="text-xs text-blue-100 font-bold">已根據您的測評結果自動過濾內容</p>
-                            </div>
-                        </div>
-                        <button onClick={() => setMode(null)} className="text-xs underline font-bold opacity-60 hover:opacity-100">清除建議</button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                            <button onClick={() => setMode(null)} className="text-xs underline font-bold opacity-60 hover:opacity-100">清除建議</button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
 
-            {/* Modern Tab Navigation */}
-            <div className="flex overflow-x-auto no-scrollbar gap-4 px-4 pb-4">
+            {/* Modern Tab Navigation - Added z-index and padding to prevent obscuring */}
+            <div className="flex overflow-x-auto no-scrollbar gap-4 px-4 pb-6 sticky top-24 z-40 bg-slate-50/80 backdrop-blur-md -mt-4 py-4">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => { setActiveTab(tab.id); setMode(null); }}
-                        className={`flex items-center gap-3 px-10 py-5 rounded-[2rem] whitespace-nowrap transition-all duration-300 font-black ${activeTab === tab.id
-                                ? `${tab.bg} ${tab.color} shadow-2xl shadow-slate-200 scale-105 ring-2 ring-current ring-offset-2`
+                        className={`flex items-center gap-3 px-10 py-5 rounded-[2.2rem] whitespace-nowrap transition-all duration-300 font-black shadow-sm ${activeTab === tab.id
+                                ? `${tab.bg} ${tab.color} shadow-xl shadow-slate-200 scale-105 ring-2 ring-current ring-offset-2`
                                 : 'bg-white text-slate-300 hover:bg-slate-50'
                             }`}
                     >
@@ -128,58 +130,60 @@ export default function SecretGarden() {
             </div>
 
             {/* Content List */}
-            <motion.div
-                key={activeTab + mode}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="glass-card p-10 min-h-[500px] border-4 border-white shadow-2xl shadow-slate-200"
-            >
-                <div className="flex items-center justify-between mb-12">
-                    <h2 className="text-3xl font-black text-slate-800">
-                        {tabs.find(t => t.id === activeTab).label}精選內容
-                    </h2>
-                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 tracking-widest uppercase italic">
-                        <Wind size={14} /> 當前環境：穩定專注
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {activeItems.map((item, i) => (
-                        <motion.div
-                            key={i}
-                            whileHover={{ y: -5 }}
-                            onClick={() => handleItemClick(item)}
-                            className={`p-8 rounded-[2.5rem] flex items-center justify-between group transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-blue-200 ${operatingItem === item.name ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-50/50 hover:bg-blue-600'
-                                }`}
-                        >
-                            <div className="flex items-center gap-6">
-                                <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-300 group-hover:text-blue-600 transition-colors shadow-sm relative overflow-hidden">
-                                    {item.icon ? <item.icon size={32} /> : <Play size={32} fill="currentColor" />}
-                                    <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-colors" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h3 className={`text-xl font-black transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-700 group-hover:text-white'}`}>
-                                        {operatingItem === item.name ? '啟動中...' : item.name}
-                                    </h3>
-                                    <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${operatingItem === item.name ? 'text-blue-100' : 'text-slate-400 group-hover:text-blue-100'}`}>
-                                        {item.sub}
-                                    </p>
-                                </div>
-                            </div>
-                            <ChevronRight size={24} className={`transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-200 group-hover:text-white'}`} />
-                        </motion.div>
-                    ))}
-
-                    {activeItems.length === 0 && (
-                        <div className="col-span-full h-64 flex flex-col items-center justify-center text-slate-300 italic font-bold">
-                            暫無建議內容
+            <div className="px-4">
+                <motion.div
+                    key={activeTab + mode}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="glass-card p-8 sm:p-12 min-h-[500px] border-4 border-white shadow-2xl shadow-slate-200/50"
+                >
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12">
+                        <h2 className="text-3xl font-black text-slate-800">
+                            {tabs.find(t => t.id === activeTab).label}精選內容
+                        </h2>
+                        <div className="flex items-center gap-2 px-6 py-3 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 tracking-widest uppercase italic">
+                            <Wind size={14} /> 當前環境：穩定專注
                         </div>
-                    )}
-                </div>
-            </motion.div>
+                    </div>
 
-            <footer className="text-center pb-8 pt-8">
-                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em]">Secret Garden Intelligence</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {activeItems.map((item, i) => (
+                            <motion.div
+                                key={i}
+                                whileHover={{ y: -5 }}
+                                onClick={() => handleItemClick(item)}
+                                className={`p-8 rounded-[2.5rem] flex items-center justify-between group transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-blue-200 ${operatingItem === item.name ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-50/50 hover:bg-blue-600'
+                                    }`}
+                            >
+                                <div className="flex items-center gap-6">
+                                    <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-300 group-hover:text-blue-600 transition-colors shadow-sm relative overflow-hidden">
+                                        {item.icon ? <item.icon size={32} /> : <Play size={32} fill="currentColor" />}
+                                        <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-colors" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <h3 className={`text-xl font-black transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-700 group-hover:text-white'}`}>
+                                            {operatingItem === item.name ? '啟動中...' : item.name}
+                                        </h3>
+                                        <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${operatingItem === item.name ? 'text-blue-100' : 'text-slate-400 group-hover:text-blue-100'}`}>
+                                            {item.sub}
+                                        </p>
+                                    </div>
+                                </div>
+                                <ChevronRight size={24} className={`transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-200 group-hover:text-white'}`} />
+                            </motion.div>
+                        ))}
+
+                        {activeItems.length === 0 && (
+                            <div className="col-span-full h-64 flex flex-col items-center justify-center text-slate-300 italic font-bold text-xl">
+                                暫無建議內容
+                            </div>
+                        )}
+                    </div>
+                </motion.div>
+            </div>
+
+            <footer className="text-center py-12">
+                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] text-slate-400/20">Secret Garden Intelligence Hub</p>
             </footer>
         </div>
     );

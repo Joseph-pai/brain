@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Link as LinkIcon, Map, Brain, User, ShoppingCart } from 'lucide-react';
+import { Home, Link as LinkIcon, Compass, Palmtree, User, ShoppingCart } from 'lucide-react';
 
 const navItems = [
     { path: '/', label: '首頁', icon: Home, color: 'bg-blue-600' },
     { path: '/test', label: '連接腦機', icon: LinkIcon, color: 'bg-indigo-600' },
-    { path: '/garden', label: '秘密花園', icon: Brain, color: 'bg-purple-600' },
-    { path: '/map', label: '心理地圖', icon: Map, color: 'bg-emerald-600' },
+    { path: '/garden', label: '秘密花園', icon: Palmtree, color: 'bg-purple-600' },
+    { path: '/map', label: '心理地圖', icon: Compass, color: 'bg-teal-600' },
     { path: '/mall', label: '健康商城', icon: ShoppingCart, color: 'bg-red-800' },
 ];
 
