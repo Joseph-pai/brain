@@ -317,42 +317,6 @@ export default function SecretGarden() {
                 )}
             </AnimatePresence>
 
-            {/* Editing Modal */}
-            <AnimatePresence>
-                {editingTrack && (
-                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="glass-card w-full max-w-sm p-8 space-y-6"
-                        >
-                            <h3 className="text-2xl font-black text-slate-800">修改名稱</h3>
-                            <input
-                                type="text"
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                                className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-500 outline-none font-bold transition-all"
-                                autoFocus
-                            />
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() => setEditingTrack(null)}
-                                    className="flex-1 p-4 bg-slate-100 text-slate-400 rounded-xl font-black uppercase tracking-widest hover:bg-slate-200 transition-colors"
-                                >
-                                    取消
-                                </button>
-                                <button
-                                    onClick={saveTrackName}
-                                    className="flex-1 p-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-colors"
-                                >
-                                    保存
-                                </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
         </div>
     );
 
@@ -421,6 +385,44 @@ export default function SecretGarden() {
             <footer className="relative z-10 text-center py-12">
                 <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Eden Garden Intelligence Hub</p>
             </footer>
+
+            {/* Editing Modal - Moved to root for better stacking context */}
+            <AnimatePresence>
+                {editingTrack && (
+                    <div className="fixed inset-0 z-[210] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="glass-card w-full max-w-sm p-8 space-y-6"
+                        >
+                            <h3 className="text-2xl font-black text-slate-800">修改名稱</h3>
+                            <input
+                                type="text"
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                                className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-blue-500 outline-none font-bold transition-all"
+                                autoFocus
+                                onKeyDown={(e) => e.key === 'Enter' && saveTrackName()}
+                            />
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => setEditingTrack(null)}
+                                    className="flex-1 p-4 bg-slate-100 text-slate-400 rounded-xl font-black uppercase tracking-widest hover:bg-slate-200 transition-colors"
+                                >
+                                    取消
+                                </button>
+                                <button
+                                    onClick={saveTrackName}
+                                    className="flex-1 p-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-colors"
+                                >
+                                    保存
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
