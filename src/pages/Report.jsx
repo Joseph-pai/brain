@@ -125,23 +125,28 @@ export default function Report() {
                                         initial={{ opacity: 0, x: 20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="group bg-slate-50/50 hover:bg-blue-50 transition-colors rounded-2xl cursor-pointer"
+                                        className={`group transition-colors rounded-2xl cursor-pointer ${ind.avg < 50
+                                                ? 'bg-orange-50/50 hover:bg-orange-100'
+                                                : 'bg-slate-50/50 hover:bg-blue-50'
+                                            }`}
                                         onClick={() => handleIndicatorClick(ind)}
                                     >
                                         <td className="py-4 px-4 font-black text-slate-700 rounded-l-2xl">{ind.label}</td>
                                         <td className="py-4 px-4 font-bold text-slate-400">{ind.range}</td>
                                         <td className="py-4 px-4 font-bold text-slate-600">{ind.min}</td>
                                         <td className="py-4 px-4 font-bold text-slate-600">{ind.max}</td>
-                                        <td className="py-4 px-4 font-black text-blue-600">{ind.avg}</td>
+                                        <td className={`py-4 px-4 font-black ${ind.avg < 50 ? 'text-orange-600 animate-pulse' : 'text-blue-600'}`}>{ind.avg}</td>
                                         <td className="py-4 px-4">
-                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase ${ind.status.includes('偏高') || ind.status.includes('較強') || ind.status.includes('較高')
-                                                    ? 'bg-blue-100 text-blue-700'
-                                                    : 'bg-emerald-100 text-emerald-700'
+                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase ${ind.avg < 50
+                                                    ? 'bg-orange-100 text-orange-700'
+                                                    : ind.status.includes('偏高') || ind.status.includes('較強') || ind.status.includes('較高')
+                                                        ? 'bg-blue-100 text-blue-700'
+                                                        : 'bg-emerald-100 text-emerald-700'
                                                 }`}>
-                                                {ind.status}
+                                                {ind.avg < 50 ? '需調節' : ind.status}
                                             </span>
                                         </td>
-                                        <td className="py-4 px-4 rounded-r-2xl text-slate-300 group-hover:text-blue-600 text-center">
+                                        <td className="py-4 px-4 rounded-r-2xl text-slate-300 group-hover:text-current text-center">
                                             <ChevronRight size={18} />
                                         </td>
                                     </motion.tr>

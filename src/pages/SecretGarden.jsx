@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Music, Gamepad, BookOpen, Video, Palette, Play, ChevronRight, Zap, Target, Wind, Coffee } from 'lucide-react';
+import { Music, Gamepad, BookOpen, Video, Palette, Play, ChevronRight, Zap, Target, Wind, Coffee, Brain } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 
@@ -42,6 +42,7 @@ export default function SecretGarden() {
     const [searchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState('music');
     const [mode, setMode] = useState(null);
+    const [operatingItem, setOperatingItem] = useState(null);
 
     useEffect(() => {
         const tabParam = searchParams.get('tab');
@@ -50,10 +51,30 @@ export default function SecretGarden() {
         if (modeParam) setMode(modeParam);
     }, [searchParams]);
 
+    const handleItemClick = (item) => {
+        setOperatingItem(item.name);
+        setTimeout(() => setOperatingItem(null), 3000);
+    };
+
     const activeItems = CONTENT_LIBRARY[activeTab]?.[mode] || CONTENT_LIBRARY[activeTab]?.default || [];
 
     return (
         <div className="space-y-8 pb-32 max-w-5xl mx-auto px-2">
+
+            {/* Operational Feedback Overlay */}
+            <AnimatePresence>
+                {operatingItem && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 50 }}
+                        className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 font-black"
+                    >
+                        <Zap size={20} className="text-amber-400 animate-pulse" />
+                        正在為您開啟：{operatingItem} ...
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Header */}
             <div className="flex items-center gap-6 px-4">
@@ -68,7 +89,7 @@ export default function SecretGarden() {
 
             {/* Smart Routing Hint */}
             <AnimatePresence>
-                {mode && (
+                {mode && !operatingItem && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
@@ -127,7 +148,9 @@ export default function SecretGarden() {
                         <motion.div
                             key={i}
                             whileHover={{ y: -5 }}
-                            className="bg-slate-50/50 p-8 rounded-[2.5rem] flex items-center justify-between group hover:bg-blue-600 transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-blue-200"
+                            onClick={() => handleItemClick(item)}
+                            className={`p-8 rounded-[2.5rem] flex items-center justify-between group transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-blue-200 ${operatingItem === item.name ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-50/50 hover:bg-blue-600'
+                                }`}
                         >
                             <div className="flex items-center gap-6">
                                 <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-300 group-hover:text-blue-600 transition-colors shadow-sm relative overflow-hidden">
@@ -135,11 +158,15 @@ export default function SecretGarden() {
                                     <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-colors" />
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className="text-xl font-black text-slate-700 group-hover:text-white transition-colors">{item.name}</h3>
-                                    <p className="text-xs text-slate-400 group-hover:text-blue-100 font-bold uppercase tracking-widest">{item.sub}</p>
+                                    <h3 className={`text-xl font-black transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-700 group-hover:text-white'}`}>
+                                        {operatingItem === item.name ? '啟動中...' : item.name}
+                                    </h3>
+                                    <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${operatingItem === item.name ? 'text-blue-100' : 'text-slate-400 group-hover:text-blue-100'}`}>
+                                        {item.sub}
+                                    </p>
                                 </div>
                             </div>
-                            <ChevronRight size={24} className="text-slate-200 group-hover:text-white transition-colors" />
+                            <ChevronRight size={24} className={`transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-200 group-hover:text-white'}`} />
                         </motion.div>
                     ))}
 
