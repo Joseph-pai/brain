@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Activity, User, Map, Brain, ShoppingCart, Link as LinkIcon } from 'lucide-react';
+import { Play, Activity, User, Map, Brain, ShoppingCart, Link as LinkIcon, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import WaveformChart from '../components/WaveformChart';
 import { generateWaveformData, BRAINWAVE_TYPES } from '../utils/mockData';
 import { motion } from 'framer-motion';
 
 const mainBlocks = [
-    { id: 'connect', title: '連接腦機', sub: '設備連接與測試', icon: LinkIcon, path: '/test', color: 'bg-blue-600', text: 'text-white' },
-    { id: 'profile', title: '個人信息', sub: '帳戶與個性化設置', icon: User, path: '/profile', color: 'bg-white', text: 'text-slate-800' },
-    { id: 'map', title: '心理地圖', sub: '健康趨勢與分析', icon: Map, path: '/map', color: 'bg-white', text: 'text-slate-800' },
-    { id: 'garden', title: '秘密花園', sub: '音樂與心理調節', icon: Brain, path: '/garden', color: 'bg-white', text: 'text-slate-800' },
-    { id: 'mall', title: '健康方案', sub: '專業方案與商城', icon: ShoppingCart, path: '/mall', color: 'bg-white', text: 'text-slate-800' },
+    { id: 'connect', title: '連接腦機', sub: '核心檢測與實時監測', icon: LinkIcon, path: '/test', color: 'from-blue-600 to-indigo-600' },
+    { id: 'garden', title: '秘密花園', sub: '音頻、遊戲與心理調節', icon: Brain, path: '/garden', color: 'from-purple-600 to-pink-600' },
+    { id: 'map', title: '心理地圖', sub: '健康日誌與趨勢分析', icon: Map, path: '/map', color: 'from-emerald-600 to-teal-600' },
+    { id: 'profile', title: '個人信息', sub: '帳戶設置與個人數據', icon: User, path: '/profile', color: 'from-amber-600 to-orange-600' },
+    { id: 'mall', title: '專業方案', sub: '會員方案與健康商城', icon: ShoppingCart, path: '/mall', color: 'from-slate-700 to-slate-900' },
 ];
 
 export default function Home() {
@@ -24,75 +24,73 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="space-y-6 pb-20">
-            {/* Header / Greetings */}
-            <div className="px-2">
-                <h1 className="text-3xl font-bold text-slate-900">早安，Joseph</h1>
-                <p className="text-slate-500">今天想如何調節您的心情？</p>
-            </div>
-
-            {/* Main Navigation Grid - 5 Blocks */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Large Connect Block */}
-                <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="sm:col-span-2 relative overflow-hidden rounded-3xl p-8 bg-gradient-to-br from-indigo-600 to-blue-600 text-white shadow-xl shadow-blue-200"
+        <div className="space-y-12 max-w-5xl mx-auto px-2">
+            {/* High-Impact Hero / Welcome */}
+            <div className="text-center space-y-4 pt-4">
+                <motion.h1
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-4xl sm:text-6xl font-black text-slate-800 tracking-tight"
                 >
-                    <Link to="/test" className="flex items-center justify-between relative z-10 w-full">
-                        <div className="space-y-2">
-                            <h2 className="text-3xl font-black">連接腦機</h2>
-                            <p className="text-blue-100 flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                                點擊開始實時監測
-                            </p>
-                        </div>
-                        <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
-                            <LinkIcon size={32} />
-                        </div>
-                    </Link>
-                    <div className="absolute top-[-10%] right-[-5%] w-48 h-48 bg-white/10 rounded-full blur-3xl" />
-                </motion.div>
-
-                {/* Sub Blocks */}
-                <div className="grid grid-cols-2 sm:col-span-2 gap-4">
-                    {mainBlocks.slice(1).map((block) => {
-                        const Icon = block.icon;
-                        return (
-                            <motion.div
-                                key={block.id}
-                                whileHover={{ y: -5 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={`glass-card p-6 flex flex-col items-center justify-center text-center group cursor-pointer aspect-square sm:aspect-auto`}
-                            >
-                                <Link to={block.path} className="w-full h-full flex flex-col items-center justify-center space-y-3">
-                                    <div className={`p-4 rounded-2xl bg-slate-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors`}>
-                                        <Icon size={28} />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h3 className="font-bold text-slate-800">{block.title}</h3>
-                                        <p className="text-[10px] text-slate-400 hidden sm:block uppercase tracking-widest">{block.sub}</p>
-                                    </div>
-                                </Link>
-                            </motion.div>
-                        );
-                    })}
-                </div>
+                    Brain<span className="text-blue-600 italic">Fit</span>
+                </motion.h1>
+                <p className="text-slate-500 font-bold max-w-lg mx-auto uppercase tracking-[0.3em] text-[10px] sm:text-xs">
+                    Next-Gen Brain-Computer Interface Portal
+                </p>
+                <div className="w-12 h-1.5 bg-blue-600 mx-auto rounded-full mt-4" />
             </div>
 
-            {/* Mini Waveform Preview for Dashboard */}
-            <div className="glass-card p-6 mt-8">
-                <div className="flex items-center justify-between mb-4 px-2">
-                    <h3 className="font-bold text-slate-800 flex items-center gap-2 italic">
-                        <Activity size={18} className="text-red-500 animate-pulse" />
-                        實時腦波狀態預覽
-                    </h3>
-                    <Link to="/test" className="text-xs text-blue-500 font-bold hover:underline">查看詳情</Link>
+            {/* Hub Portal - Large Icons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+                {mainBlocks.map((block, idx) => (
+                    <motion.div
+                        key={block.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`group relative overflow-hidden rounded-[2.5rem] p-8 sm:p-12 shadow-2xl shadow-slate-200 transition-all cursor-pointer ${idx === 0 ? 'sm:col-span-2' : ''
+                            }`}
+                    >
+                        <Link to={block.path} className="flex items-center gap-8 relative z-10">
+                            <div className={`p-6 sm:p-8 rounded-[2rem] bg-gradient-to-br ${block.color} text-white shadow-xl group-hover:rotate-6 transition-transform`}>
+                                <block.icon size={idx === 0 ? 56 : 40} strokeWidth={2.5} />
+                            </div>
+                            <div className="flex-1 text-left space-y-2">
+                                <h3 className="text-2xl sm:text-4xl font-black text-slate-800 group-hover:text-blue-600 transition-colors">
+                                    {block.title}
+                                </h3>
+                                <p className="text-slate-400 font-bold text-xs sm:text-sm uppercase tracking-widest">{block.sub}</p>
+                            </div>
+                            <ChevronRight size={32} className="text-slate-200 group-hover:text-blue-600 transition-colors hidden sm:block" />
+                        </Link>
+
+                        {/* Decorative Background for first item */}
+                        {idx === 0 && (
+                            <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-50/50 -skew-x-12 translate-x-12" />
+                        )}
+                    </motion.div>
+                ))}
+            </div>
+
+            {/* Quick Status Bar */}
+            <div className="glass-card p-6 flex flex-col sm:flex-row items-center justify-between gap-6 border-2 border-blue-50">
+                <div className="flex items-center gap-4">
+                    <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+                    <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">系統狀態</p>
+                        <p className="text-sm font-bold text-slate-700">Joseph 的腦機已連接</p>
+                    </div>
                 </div>
-                <div className="h-[150px]">
+                <div className="h-12 w-full sm:w-64">
                     <WaveformChart data={waveData} />
                 </div>
             </div>
+
+            <footer className="text-center py-8">
+                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em]">Taiwan BCI Advanced Intelligence</p>
+            </footer>
         </div>
     );
 }
