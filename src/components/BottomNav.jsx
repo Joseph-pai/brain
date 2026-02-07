@@ -12,31 +12,38 @@ const navItems = [
 
 export default function BottomNav() {
     return (
-        <nav className="fixed bottom-4 left-4 right-4 bg-white/90 backdrop-blur-2xl border border-slate-200/50 rounded-[2.5rem] shadow-2xl z-[100] px-4">
-            <div className="flex justify-around items-center h-20">
-                {navItems.map(({ path, label, icon: Icon, color }) => (
-                    <NavLink
-                        key={path}
-                        to={path}
-                        className={({ isActive }) =>
-                            `flex flex-col items-center justify-center w-full h-full transition-all duration-500 group ${isActive ? 'scale-110' : 'opacity-40 hover:opacity-100 hover:scale-105'
-                            }`
-                        }
-                    >
-                        {({ isActive }) => (
-                            <>
-                                <div className={`p-2.5 rounded-2xl transition-all duration-500 ${isActive ? `${color} text-white shadow-lg shadow-blue-100 rotate-6` : 'text-slate-400'
-                                    }`}>
-                                    <Icon size={24} strokeWidth={isActive ? 3 : 2} />
-                                </div>
-                                <span className={`text-[9px] font-black uppercase tracking-widest mt-1.5 truncate ${isActive ? 'text-slate-800' : 'text-slate-400'
-                                    }`}>
-                                    {label}
-                                </span>
-                            </>
-                        )}
-                    </NavLink>
-                ))}
+        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg bg-white/95 backdrop-blur-2xl border border-slate-200/50 rounded-full shadow-2xl z-[100] px-4 py-2">
+            <div className="flex justify-between items-center max-w-md mx-auto">
+                {navItems.map((item) => {
+                    const isActive = location.pathname === item.path;
+                    return (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            className="relative flex flex-col items-center py-1 group"
+                        >
+                            <motion.div
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className={`p-2.5 rounded-2xl transition-all ${isActive
+                                        ? `${item.color} text-white shadow-lg`
+                                        : 'text-slate-400 hover:text-slate-600'
+                                    }`}
+                            >
+                                <item.icon size={20} />
+                            </motion.div>
+                            <span className={`text-[9px] mt-1 font-bold ${isActive ? 'text-slate-800' : 'text-slate-400'}`}>
+                                {item.label}
+                            </span>
+                            {isActive && (
+                                <motion.div
+                                    layoutId="navTab"
+                                    className="absolute -bottom-1 w-1 h-1 bg-slate-800 rounded-full"
+                                />
+                            )}
+                        </Link>
+                    );
+                })}
             </div>
         </nav>
     );
