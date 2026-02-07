@@ -1,189 +1,267 @@
-import React, { useState, useEffect } from 'react';
-import { Music, Gamepad, BookOpen, Video, Palette, Play, ChevronRight, Zap, Target, Wind, Coffee, Palmtree } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Music, Gamepad, MessageSquare, Video, Play, Pause, SkipForward, SkipBack, Plus, Trash2, CheckCircle2, XCircle, ChevronLeft, Volume2, Search, Palmtree, Headphones, Rocket, Mic2, Clapperboard, Check, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
 
-const tabs = [
-    { id: 'music', label: '音樂', icon: Music, color: 'text-pink-500', bg: 'bg-pink-50' },
-    { id: 'games', label: '遊戲', icon: Gamepad, color: 'text-purple-500', bg: 'bg-purple-50' },
-    { id: 'audio', label: '有聲書', icon: BookOpen, color: 'text-blue-500', bg: 'bg-blue-50' },
-    { id: 'video', label: '影片', icon: Video, color: 'text-red-500', bg: 'bg-red-50' },
+const EDEN_THEMES = [
+    { id: 'music', title: '音樂調節', sub: '腦波同步音療', icon: Headphones, color: 'from-blue-500 to-indigo-600' },
+    { id: 'game', title: '遊戲樂園', sub: '意念訓練挑戰', icon: Rocket, color: 'from-purple-500 to-pink-600' },
+    { id: 'whisper', title: '輕聲細語', sub: '深度沈浸助眠', icon: Mic2, color: 'from-emerald-500 to-teal-600' },
+    { id: 'cinema', title: '情境影院', sub: '全景感官放鬆', icon: Clapperboard, color: 'from-amber-500 to-orange-600' },
 ];
 
-const CONTENT_LIBRARY = {
-    music: {
-        decompression: [{ name: '深海冥想曲', sub: '壓力釋放 • 15min' }, { name: '阿爾法波森林', sub: '緩解焦慮 • 10min' }],
-        cheerful: [{ name: '陽光午後', sub: '提升情緒 • 5min' }, { name: '快樂多巴胺', sub: '專注提升 • 8min' }],
-        soothing: [{ name: '雨後清晨', sub: '放鬆穩定 • 20min' }, { name: '月光搖籃', sub: '助眠修復 • 30min' }],
-        default: [{ name: '一般調節音樂 1', sub: '自然音效' }, { name: '一般調節音樂 2', sub: '白噪音' }]
-    },
-    games: {
-        'tug-of-war': [{ name: '意念拔河比賽', sub: '專注度訓練 • 實時對抗', icon: Target }],
-        default: [{ name: '情緒消消樂', sub: '反應能力' }, { name: '星空記憶', sub: '專注鍛鍊' }]
-    },
-    audio: {
-        whispers: [{ name: '輕聲細語：星際漫遊', sub: '疲勞修復 • 睡眠誘導', icon: Coffee }],
-        default: [{ name: '心靈讀本', sub: '智慧分享' }, { name: '寓言故事', sub: '放鬆思考' }]
-    },
-    video: {
-        default: [{ name: '極光延時', sub: '視覺放鬆' }, { name: '深海探秘', sub: '深度沈浸' }]
-    }
-};
-
-const MODE_LABELS = {
-    decompression: '減壓音樂庫',
-    cheerful: '歡快音樂庫',
-    soothing: '舒緩音樂庫',
-    'tug-of-war': '專注訓練：意念拔河',
-    whispers: '疲勞修復：輕聲細語',
-};
+const INITIAL_MUSIC = [
+    { id: 1, name: '深海冥想曲', sub: 'Alpha 波同步 • 12:05', url: '#' },
+    { id: 2, name: '阿爾法波森林', sub: 'Beta 波平衡 • 08:30', url: '#' },
+    { id: 3, name: '陽光午後', sub: 'Gamma 波激發 • 05:45', url: '#' },
+    { id: 4, name: '雨後清晨', sub: 'Theta 波誘導 • 15:20', url: '#' },
+];
 
 export default function SecretGarden() {
-    const [searchParams] = useSearchParams();
-    const [activeTab, setActiveTab] = useState('music');
-    const [mode, setMode] = useState(null);
-    const [operatingItem, setOperatingItem] = useState(null);
+    const [activeTheme, setActiveTheme] = useState(null);
+    const [musicList, setMusicList] = useState(INITIAL_MUSIC);
+    const [selectedMusic, setSelectedMusic] = useState([]);
+    const [currentTrack, setCurrentTrack] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [bgColor, setBgColor] = useState('from-slate-50 to-slate-100');
 
+    // Dynamic background color effect during playback
     useEffect(() => {
-        const tabParam = searchParams.get('tab');
-        const modeParam = searchParams.get('mode');
-        if (tabParam) setActiveTab(tabParam);
-        if (modeParam) setMode(modeParam);
-    }, [searchParams]);
+        let interval;
+        if (isPlaying) {
+            const colors = [
+                'from-blue-100 to-purple-100',
+                'from-emerald-100 to-teal-100',
+                'from-pink-100 to-rose-100',
+                'from-indigo-100 to-cyan-100'
+            ];
+            let i = 0;
+            interval = setInterval(() => {
+                setBgColor(colors[i % colors.length]);
+                i++;
+            }, 3000);
+        } else {
+            setBgColor('from-slate-50 to-slate-100');
+        }
+        return () => clearInterval(interval);
+    }, [isPlaying]);
 
-    const handleItemClick = (item) => {
-        setOperatingItem(item.name);
-        setTimeout(() => setOperatingItem(null), 3000);
+    const handleAddMusic = () => {
+        // Simulating folder selection/file adding
+        const newSong = {
+            id: Date.now(),
+            name: `自定義音樂 ${musicList.length + 1}`,
+            sub: '本機文件 • 04:20',
+            url: '#'
+        };
+        setMusicList([...musicList, newSong]);
     };
 
-    const activeItems = CONTENT_LIBRARY[activeTab]?.[mode] || CONTENT_LIBRARY[activeTab]?.default || [];
+    const toggleSelect = (id) => {
+        if (selectedMusic.includes(id)) {
+            setSelectedMusic(selectedMusic.filter(ms => ms !== id));
+        } else {
+            setSelectedMusic([...selectedMusic, id]);
+        }
+    };
 
-    return (
-        <div className="space-y-8 pb-32 max-w-5xl mx-auto px-2 pt-6">
+    const deleteSelected = () => {
+        setMusicList(musicList.filter(m => !selectedMusic.includes(m.id)));
+        setSelectedMusic([]);
+        setIsSelecting(false);
+        if (currentTrack && selectedMusic.includes(currentTrack.id)) {
+            setCurrentTrack(null);
+            setIsPlaying(false);
+        }
+    };
 
-            {/* Operational Feedback Overlay */}
-            <AnimatePresence>
-                {operatingItem && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 50 }}
-                        className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl z-[150] flex items-center gap-3 font-black"
-                    >
-                        <Zap size={20} className="text-amber-400 animate-pulse" />
-                        正在為您開啟：{operatingItem} ...
-                    </motion.div>
-                )}
-            </AnimatePresence>
+    const playTrack = (track) => {
+        if (isSelecting) {
+            toggleSelect(track.id);
+            return;
+        }
+        setCurrentTrack(track);
+        setIsPlaying(true);
+    };
 
-            {/* Header */}
-            <div className="flex items-center gap-6 px-4 mb-4">
-                <div className="p-4 bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-[2rem] shadow-xl shadow-pink-100 italic">
+    const renderPortal = () => (
+        <div className="space-y-12">
+            <div className="flex items-center gap-6 px-4">
+                <div className="p-4 bg-gradient-to-br from-emerald-600 to-teal-600 text-white rounded-[2rem] shadow-xl shadow-emerald-100 italic transform -rotate-6">
                     <Palmtree size={40} />
                 </div>
                 <div className="space-y-1">
-                    <h1 className="text-4xl font-black text-slate-800 tracking-tight">秘密調節花園</h1>
+                    <h1 className="text-4xl font-black text-slate-800 tracking-tight">伊甸園</h1>
                     <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Psychological Regulation Hub</p>
                 </div>
             </div>
 
-            {/* Smart Routing Hint */}
-            <div className="px-4">
-                <AnimatePresence>
-                    {mode && !operatingItem && (
-                        <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="bg-blue-600 rounded-[2rem] p-6 text-white flex items-center justify-between shadow-xl shadow-blue-100 mb-6"
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="p-2 bg-white/20 rounded-xl">
-                                    <Zap size={20} className="text-amber-400" />
-                                </div>
-                                <div>
-                                    <h4 className="font-black">推薦模式：{MODE_LABELS[mode] || mode}</h4>
-                                    <p className="text-xs text-blue-100 font-bold">已根據您的測評結果自動過濾內容</p>
-                                </div>
-                            </div>
-                            <button onClick={() => setMode(null)} className="text-xs underline font-bold opacity-60 hover:opacity-100">清除建議</button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 px-4">
+                {EDEN_THEMES.map((theme) => (
+                    <motion.button
+                        key={theme.id}
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setActiveTheme(theme.id)}
+                        className="group relative overflow-hidden glass-card p-12 flex flex-col items-center gap-8 text-center border-2 border-transparent hover:border-emerald-100 transition-all shadow-2xl shadow-slate-200/50"
+                    >
+                        <div className={`p-8 rounded-[2.5rem] bg-gradient-to-br ${theme.color} text-white shadow-lg group-hover:rotate-12 transition-transform`}>
+                            <theme.icon size={48} strokeWidth={2.5} />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-3xl font-black text-slate-800">{theme.title}</h3>
+                            <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">{theme.sub}</p>
+                        </div>
+                        <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/20 -skew-x-12 translate-x-12 group-hover:bg-emerald-50/10 transition-colors" />
+                    </motion.button>
+                ))}
+            </div>
+        </div>
+    );
+
+    const renderMusicModule = () => (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 relative z-10 transition-colors duration-1000">
+            <div className="flex items-center justify-between mb-8">
+                <button
+                    onClick={() => setActiveTheme(null)}
+                    className="p-3 bg-white shadow-xl shadow-slate-200 rounded-2xl text-slate-400 hover:text-emerald-600 transition-colors"
+                >
+                    <ChevronLeft size={24} />
+                </button>
+                <div className="flex items-center gap-3">
+                    <Headphones size={28} className="text-blue-600" />
+                    <h2 className="text-2xl font-black text-slate-800 tracking-tight">音樂調節</h2>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => { setIsSelecting(!isSelecting); setSelectedMusic([]); }}
+                        className={`p-3 rounded-2xl transition-all ${isSelecting ? 'bg-orange-500 text-white shadow-orange-100' : 'bg-white shadow-xl shadow-slate-200 text-slate-400 hover:text-orange-600'}`}
+                    >
+                        {isSelecting ? <X size={20} /> : <Trash2 size={20} />}
+                    </button>
+                    <button
+                        onClick={handleAddMusic}
+                        className="p-3 bg-emerald-600 text-white shadow-xl shadow-emerald-100 rounded-2xl hover:bg-emerald-700 transition-colors"
+                    >
+                        <Plus size={20} />
+                    </button>
+                </div>
             </div>
 
-            {/* Modern Tab Navigation - Added z-index and padding to prevent obscuring */}
-            <div className="flex overflow-x-auto no-scrollbar gap-4 px-4 pb-6 sticky top-24 z-40 bg-slate-50/80 backdrop-blur-md -mt-4 py-4">
-                {tabs.map((tab) => (
+            {isSelecting && selectedMusic.length > 0 && (
+                <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="bg-orange-500 text-white p-4 rounded-3xl flex justify-between items-center shadow-xl shadow-orange-100"
+                >
+                    <span className="font-black italic ml-4">已選擇 {selectedMusic.length} 首音樂</span>
                     <button
-                        key={tab.id}
-                        onClick={() => { setActiveTab(tab.id); setMode(null); }}
-                        className={`flex items-center gap-3 px-10 py-5 rounded-[2.2rem] whitespace-nowrap transition-all duration-300 font-black shadow-sm ${activeTab === tab.id
-                                ? `${tab.bg} ${tab.color} shadow-xl shadow-slate-200 scale-105 ring-2 ring-current ring-offset-2`
-                                : 'bg-white text-slate-300 hover:bg-slate-50'
+                        onClick={deleteSelected}
+                        className="bg-white text-orange-500 px-6 py-2 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-orange-50 transition-colors"
+                    >
+                        確認刪除
+                    </button>
+                </motion.div>
+            )}
+
+            <div className="space-y-4">
+                {musicList.map((track) => (
+                    <motion.div
+                        key={track.id}
+                        layout
+                        onClick={() => playTrack(track)}
+                        className={`glass-card p-6 flex items-center justify-between group cursor-pointer transition-all border-2 ${currentTrack?.id === track.id ? 'border-emerald-200 bg-emerald-50/30' :
+                                selectedMusic.includes(track.id) ? 'border-orange-200 bg-orange-50/30' : 'border-transparent hover:border-blue-100'
                             }`}
                     >
-                        <tab.icon size={22} />
-                        <span>{tab.label}</span>
-                    </button>
+                        <div className="flex items-center gap-6">
+                            <div className="relative">
+                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${currentTrack?.id === track.id ? 'bg-emerald-600 text-white' : 'bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white'
+                                    }`}>
+                                    {currentTrack?.id === track.id && isPlaying ? (
+                                        <div className="flex gap-1 items-end h-6">
+                                            {[1, 2, 3].map(i => (
+                                                <motion.div
+                                                    key={i}
+                                                    animate={{ height: [8, 20, 10, 24, 12, 18, 8] }}
+                                                    transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
+                                                    className="w-1 bg-white rounded-full"
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : <Play size={24} fill={currentTrack?.id === track.id ? 'currentColor' : 'none'} />}
+                                </div>
+                                {isSelecting && (
+                                    <div className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all ${selectedMusic.includes(track.id) ? 'bg-orange-500 border-white text-white' : 'bg-white border-slate-200 text-slate-200'
+                                        }`}>
+                                        <Check size={14} strokeWidth={4} />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <h4 className={`font-black text-lg ${currentTrack?.id === track.id ? 'text-emerald-700' : 'text-slate-800'}`}>{track.name}</h4>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{track.sub}</p>
+                            </div>
+                        </div>
+                        <Volume2 size={24} className={currentTrack?.id === track.id ? 'text-emerald-600' : 'text-slate-200 group-hover:text-blue-600'} />
+                    </motion.div>
                 ))}
             </div>
 
-            {/* Content List */}
-            <div className="px-4">
-                <motion.div
-                    key={activeTab + mode}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="glass-card p-8 sm:p-12 min-h-[500px] border-4 border-white shadow-2xl shadow-slate-200/50"
-                >
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12">
-                        <h2 className="text-3xl font-black text-slate-800">
-                            {tabs.find(t => t.id === activeTab).label}精選內容
-                        </h2>
-                        <div className="flex items-center gap-2 px-6 py-3 bg-slate-100 rounded-full text-[10px] font-black text-slate-400 tracking-widest uppercase italic">
-                            <Wind size={14} /> 當前環境：穩定專注
+            {/* Sticky Player Bar */}
+            <AnimatePresence>
+                {currentTrack && (
+                    <motion.div
+                        initial={{ y: 100 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: 100 }}
+                        className="fixed bottom-24 left-6 right-6 bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-2xl border border-slate-100 flex items-center gap-6 z-[110]"
+                    >
+                        <div className="h-16 w-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg animate-spin-slow">
+                            <Music size={32} />
                         </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {activeItems.map((item, i) => (
-                            <motion.div
-                                key={i}
-                                whileHover={{ y: -5 }}
-                                onClick={() => handleItemClick(item)}
-                                className={`p-8 rounded-[2.5rem] flex items-center justify-between group transition-all duration-500 cursor-pointer shadow-sm hover:shadow-xl hover:shadow-blue-200 ${operatingItem === item.name ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-50/50 hover:bg-blue-600'
-                                    }`}
+                        <div className="flex-1 min-w-0">
+                            <h4 className="font-black text-slate-800 truncate">{currentTrack.name}</h4>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">正在播放...</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <button className="text-slate-300 hover:text-slate-600"><SkipBack size={24} /></button>
+                            <button
+                                onClick={() => setIsPlaying(!isPlaying)}
+                                className="w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
                             >
-                                <div className="flex items-center gap-6">
-                                    <div className="w-20 h-20 bg-white rounded-[1.5rem] flex items-center justify-center text-slate-300 group-hover:text-blue-600 transition-colors shadow-sm relative overflow-hidden">
-                                        {item.icon ? <item.icon size={32} /> : <Play size={32} fill="currentColor" />}
-                                        <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/5 transition-colors" />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h3 className={`text-xl font-black transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-700 group-hover:text-white'}`}>
-                                            {operatingItem === item.name ? '啟動中...' : item.name}
-                                        </h3>
-                                        <p className={`text-xs font-bold uppercase tracking-widest transition-colors ${operatingItem === item.name ? 'text-blue-100' : 'text-slate-400 group-hover:text-blue-100'}`}>
-                                            {item.sub}
-                                        </p>
-                                    </div>
-                                </div>
-                                <ChevronRight size={24} className={`transition-colors ${operatingItem === item.name ? 'text-white' : 'text-slate-200 group-hover:text-white'}`} />
-                            </motion.div>
-                        ))}
+                                {isPlaying ? <Pause size={24} fill="white" /> : <Play size={24} fill="white" />}
+                            </button>
+                            <button className="text-slate-300 hover:text-slate-600"><SkipForward size={24} /></button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
 
-                        {activeItems.length === 0 && (
-                            <div className="col-span-full h-64 flex flex-col items-center justify-center text-slate-300 italic font-bold text-xl">
-                                暫無建議內容
-                            </div>
-                        )}
+    return (
+        <div className={`min-h-screen bg-gradient-to-br ${bgColor} transition-colors duration-[3000ms] pb-32 max-w-6xl mx-auto px-2 pt-6`}>
+            {!activeTheme && renderPortal()}
+            {activeTheme === 'music' && renderMusicModule()}
+            {activeTheme && activeTheme !== 'music' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
+                    <div className="flex items-center gap-6 mb-12">
+                        <button onClick={() => setActiveTheme(null)} className="p-3 bg-white shadow-xl shadow-slate-200 rounded-2xl text-slate-400 hover:text-emerald-600 transition-colors">
+                            <ChevronLeft size={24} />
+                        </button>
+                        <h2 className="text-3xl font-black text-slate-800 italic">
+                            {EDEN_THEMES.find(t => t.id === activeTheme).title}
+                        </h2>
                     </div>
-                </motion.div>
-            </div>
+                    <div className="h-96 flex flex-col items-center justify-center text-slate-300 italic font-bold text-xl glass-card">
+                        模塊開發中...
+                    </div>
+                </div>
+            )}
 
             <footer className="text-center py-12">
-                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] text-slate-400/20">Secret Garden Intelligence Hub</p>
+                <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Eden Garden Intelligence Hub</p>
             </footer>
         </div>
     );
