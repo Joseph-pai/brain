@@ -434,7 +434,7 @@ export default function Test() {
                             <BarChart data={spectrum}>
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 800 }} />
                                 <YAxis hide domain={[0, 100]} />
-                                <Bar dataKey="val" radius={[4, 4, 0, 0]}>
+                                <Bar dataKey="val" radius={[4, 4, 0, 0]} isAnimationActive={false}>
                                     {spectrum.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
