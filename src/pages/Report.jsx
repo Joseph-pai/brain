@@ -176,7 +176,7 @@ export default function Report() {
                     正逐漸侵蝕您的情緒穩定性。特別是在下午 3:00 至 5:00 期間，
                     <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">壓力系數</button>
                     有顯著抬升現象。為了防止長期耗竭，建議今天下午點擊進入
-                    <button onClick={() => navigate('/garden')} className="text-blue-600 font-bold underline mx-1">伊甸園</button>
+                    <button onClick={() => navigate('/garden')} className="text-blue-600 font-bold underline mx-1">伊甸心園</button>
                     進行至少 15 分鐘的音樂調節或沉浸式放鬆，以重置您的基線心理狀態。
                 </p>
             </div>

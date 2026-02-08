@@ -133,7 +133,7 @@ export default function SecretGarden() {
                     <Palmtree size={40} />
                 </div>
                 <div className="space-y-1">
-                    <h1 className="text-4xl font-black text-slate-800 tracking-tight">伊甸園</h1>
+                    <h1 className="text-4xl font-black text-slate-800 tracking-tight">伊甸心園</h1>
                     <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Psychological Regulation Hub</p>
                 </div>
             </div>

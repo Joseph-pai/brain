@@ -102,7 +102,7 @@ export default function Test() {
                     ...s,
                     val: Math.max(10, Math.min(100, s.val + (Math.random() > 0.5 ? 2 : -2)))
                 })));
-            }, 100);
+            }, 200);
         }
         return () => clearInterval(interval);
     }, [isTesting, timer]);
@@ -337,7 +337,7 @@ export default function Test() {
                                         <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">疲勞值</button> 與
                                         <button onClick={() => navigate('/garden')} className="text-rose-500 font-bold hover:underline mx-1">焦慮感</button>
                                         已越過警戒線。這種「高能耗」模式會加速神經疲勞，建議前往
-                                        <button onClick={() => navigate('/garden')} className="text-blue-600 font-bold underline mx-1">伊甸園</button>
+                                        <button onClick={() => navigate('/garden')} className="text-blue-600 font-bold underline mx-1">伊甸心園</button>
                                         進行短暫冥想或聽音樂以調低壓力值。
                                     </p>
                                 </div>
@@ -410,6 +410,7 @@ export default function Test() {
                                 />
                                 <YAxis
                                     domain={[0, 110]}
+                                    width={40}
                                     label={{ value: 'Amp', angle: -90, position: 'insideLeft', fontSize: 10, fontWeight: 800 }}
                                     tick={{ fontSize: 9, fill: '#94a3b8' }}
                                 />
@@ -429,10 +430,16 @@ export default function Test() {
                     <div className="flex items-center justify-between mt-4">
                         <h4 className="px-4 py-1.5 bg-blue-500 text-white text-[10px] font-black rounded-lg uppercase tracking-widest">EEG Power Distribution</h4>
                     </div>
-                    <div className="h-[200px] w-full">
+                    <div className="h-[200px] w-full overflow-hidden">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={spectrum}>
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 800 }} />
+                            <BarChart data={spectrum} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                                <XAxis
+                                    dataKey="name"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 800 }}
+                                    interval={0}
+                                />
                                 <YAxis hide domain={[0, 100]} />
                                 <Bar dataKey="val" radius={[4, 4, 0, 0]} isAnimationActive={false}>
                                     {spectrum.map((entry, index) => (
@@ -498,7 +505,7 @@ export default function Test() {
                     <div className="flex flex-col items-center justify-center py-8 space-y-6">
                         <div className="flex items-center gap-4 text-slate-800">
                             <Timer size={24} className="text-blue-600" />
-                            <span className="text-4xl font-black font-mono">{formatTime(timer)}</span>
+                            <span className="text-4xl font-black font-mono tabular-nums">{formatTime(timer)}</span>
                         </div>
 
                         {!isTesting ? (
@@ -517,7 +524,7 @@ export default function Test() {
                         ) : (
                             <button
                                 onClick={() => setIsTesting(false)}
-                                className="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xl hover:bg-red-50 hover:text-red-500 transition-colors"
+                                className="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xl hover:bg-red-50 hover:text-red-500 transition-colors relative z-[50] touch-manipulation"
                             >
                                 停止檢測
                             </button>

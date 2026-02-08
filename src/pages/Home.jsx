@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const mainBlocks = [
     { id: 'connect', title: '連接腦機', sub: '核心檢測與實時監測', icon: LinkIcon, path: '/test', color: 'from-blue-600 to-indigo-600', large: true },
-    { id: 'garden', title: '伊甸園', sub: '音頻、遊戲與心理調節', icon: Palmtree, path: '/garden', color: 'from-purple-600 to-pink-600' },
+    { id: 'garden', title: '伊甸心園', sub: '音頻、遊戲與心理調節', icon: Palmtree, path: '/garden', color: 'from-purple-600 to-pink-600' },
     { id: 'map', title: '心理地圖', sub: '健康日誌與趨勢分析', icon: Compass, path: '/map', color: 'from-emerald-600 to-teal-600' },
     { id: 'profile', title: '個人信息', sub: '帳戶設置與個人數據', icon: User, path: '/profile', color: 'from-amber-600 to-orange-600' },
     { id: 'mall', title: '健康商城', sub: '會員方案與福利購買', icon: ShoppingCart, path: '/mall', color: 'from-red-800 to-red-950' },
