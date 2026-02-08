@@ -509,25 +509,30 @@ export default function Test() {
                         </div>
 
                         {!isTesting ? (
-                            <button
-                                onClick={() => {
-                                    setIsTesting(true);
-                                    setTimer(1800);
-                                    setIsFinished(false);
-                                    // Initialize with some base values immediately if starting
-                                    setStats(prev => prev.map(s => ({ ...s, val: 30 + Math.floor(Math.random() * 40) })));
-                                }}
-                                className="w-full py-5 bg-blue-600 text-white rounded-3xl font-black text-xl shadow-xl shadow-blue-200 hover:scale-105 transition-transform"
-                            >
-                                {isFinished || (stats[0].val > 0) ? '重新檢測' : '開始檢測'}
-                            </button>
+                            <div className="flex flex-col items-center w-full gap-2">
+                                <button
+                                    onClick={() => {
+                                        setIsTesting(true);
+                                        setTimer(1800);
+                                        setIsFinished(false);
+                                        // Initialize with some base values immediately if starting
+                                        setStats(prev => prev.map(s => ({ ...s, val: 30 + Math.floor(Math.random() * 40) })));
+                                    }}
+                                    className="w-full py-5 bg-blue-600 text-white rounded-3xl font-black text-xl shadow-xl shadow-blue-200 hover:scale-105 transition-transform"
+                                >
+                                    {isFinished || (stats[0].val > 0) ? '重新檢測' : '開始檢測'}
+                                </button>
+                            </div>
                         ) : (
-                            <button
-                                onClick={() => setIsTesting(false)}
-                                className="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xl hover:bg-red-50 hover:text-red-500 transition-colors relative z-[50] touch-manipulation"
-                            >
-                                停止檢測
-                            </button>
+                            <div className="flex flex-col items-center w-full gap-2">
+                                <button
+                                    onClick={() => setIsTesting(false)}
+                                    className="w-full py-5 bg-slate-100 text-slate-400 rounded-3xl font-black text-xl hover:bg-red-50 hover:text-red-500 transition-colors relative z-[50] touch-manipulation"
+                                >
+                                    停止檢測
+                                </button>
+                                <p className="text-[10px] font-bold text-slate-400 animate-pulse">點擊2下停止檢測</p>
+                            </div>
                         )}
                     </div>
                 </div>
