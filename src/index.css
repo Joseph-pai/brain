@@ -37,7 +37,7 @@
   }
 
   .viange-gradient-text {
-    background: linear-gradient(to right, #016DF7 0%, #5243C2 22%, #22C55E 35%, #FFD150 50%, #FF8CA4 75%, #FE612E 100%);
+    background: linear-gradient(to right, #016DF7 0%, #5243C2 25%, #22C55E 33%, #FFD150 50%, #FF8CA4 75%, #FE612E 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
