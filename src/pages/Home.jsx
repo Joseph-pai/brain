@@ -21,7 +21,7 @@ export default function Home() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="text-4xl sm:text-6xl font-black text-slate-800 tracking-tight"
                 >
-                    Brain<span className="text-blue-600 italic">Fit</span>
+                    VIANGE
                 </motion.h1>
                 <p className="text-slate-500 font-bold max-w-lg mx-auto uppercase tracking-[0.3em] text-[10px] sm:text-xs">
                     Next-Gen Brain-Computer Interface Portal

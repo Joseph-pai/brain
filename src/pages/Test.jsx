@@ -188,7 +188,7 @@ export default function Test() {
                                     <div className="space-y-6">
                                         <h3 className="text-2xl font-black text-slate-800">搜尋到設備</h3>
                                         <div className="space-y-3">
-                                            {['BrainFit-X1 (ID: 72A)', 'NeuroLink-V2 (ID: 9B3)', 'SenseLink (ID: 4F1)'].map((name, i) => (
+                                            {['VIANGE-X1 (ID: 72A)', 'NeuroLink-V2 (ID: 9B3)', 'SenseLink (ID: 4F1)'].map((name, i) => (
                                                 <button
                                                     key={i}
                                                     onClick={() => connectToDevice(name)}
