@@ -17,7 +17,7 @@ export default function Sidebar() {
             <div className="p-8">
                 <h1 className="text-3xl font-black text-blue-600 flex items-center gap-3">
                     <span className="p-2 bg-blue-100 rounded-2xl">🧠</span>
-                    BrainFit
+                    VIANGE
                 </h1>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-1">Advanced BCI System</p>
             </div>

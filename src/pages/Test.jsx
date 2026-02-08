@@ -362,7 +362,7 @@ export default function Test() {
                         <Bluetooth size={20} />
                     </div>
                     <div>
-                        <h3 className="font-black text-slate-800">BrainFit V2</h3>
+                        <h3 className="font-black text-slate-800">VIANGE V2</h3>
                         <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">Connected • 實時數據傳輸中</p>
                     </div>
                 </div>

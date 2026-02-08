@@ -146,7 +146,7 @@ export default function HealthMall() {
             </div>
 
             <footer className="text-center py-12">
-                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] italic">BrainFit Commerce Hub V2.0</p>
+                <p className="text-[10px] text-slate-300 font-bold uppercase tracking-[0.5em] italic">VIANGE Commerce Hub V2.0</p>
             </footer>
         </div>
     );
