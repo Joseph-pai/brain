@@ -19,7 +19,7 @@ export default function Home() {
                 <motion.h1
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="text-4xl sm:text-6xl font-black text-slate-800 tracking-tight"
+                    className="text-4xl sm:text-6xl font-black tracking-tight viange-gradient-text"
                 >
                     VIANGE
                 </motion.h1>

@@ -15,9 +15,9 @@ export default function Sidebar() {
     return (
         <aside className="hidden lg:flex flex-col w-72 bg-white border-r border-slate-200 h-screen sticky top-0 shadow-sm">
             <div className="p-8">
-                <h1 className="text-3xl font-black text-blue-600 flex items-center gap-3">
+                <h1 className="text-3xl font-black flex items-center gap-3">
                     <span className="p-2 bg-blue-100 rounded-2xl">🧠</span>
-                    VIANGE
+                    <span className="viange-gradient-text">VIANGE</span>
                 </h1>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mt-2 ml-1">Advanced BCI System</p>
             </div>

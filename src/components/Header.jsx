@@ -10,7 +10,7 @@ export default function Header() {
                     <Zap size={20} className="text-blue-400" />
                 </div>
                 <div>
-                    <h1 className="text-xl font-black text-slate-800 italic">VIANGE</h1>
+                    <h1 className="text-xl font-black italic viange-gradient-text">VIANGE</h1>
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest -mt-1">BCI Intelligence</p>
                 </div>
             </div>
