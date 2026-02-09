@@ -8,6 +8,7 @@ import SecretGarden from './pages/SecretGarden';
 import PsychMap from './pages/PsychMap';
 import Profile from './pages/Profile';
 import HealthMall from './pages/HealthMall';
+import Manual from './pages/Manual';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="map" element={<PsychMap />} />
           <Route path="profile" element={<Profile />} />
           <Route path="mall" element={<HealthMall />} />
+          <Route path="manual" element={<Manual />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

@@ -2,45 +2,60 @@
 <html>
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
-            background: #000;
+            background: #fff;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Outfit', sans-serif;
         }
 
         canvas {
-            width: 640px;
-            height: 640px;
+            width: 1024px;
+            height: 1024px;
         }
     </style>
 </head>
 
 <body>
-    <canvas id="canvas" width="640" height="640"></canvas>
+    <canvas id="canvas" width="1024" height="1024"></canvas>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = 'file:///Users/joseph/.gemini/antigravity/brain/fa4e8167-b646-456d-ae02-627d87076563/media__1770519393810.jpg';
 
-        const imgA = new Image();
-        const imgB = new Image();
+        img.onload = () => {
+            // 1. Draw the background, cropping the white border
+            // The border is roughly 80px on each side
+            const border = 80;
+            const size = 1024 - (border * 2);
+            ctx.drawImage(img, border, border, size, size, 0, 0, 1024, 1024);
 
-        imgA.src = 'file:///Users/joseph/.gemini/antigravity/brain/fa4e8167-b646-456d-ae02-627d87076563/viange_pwa_icon_dark_vibrant_1770515073204.png';
-        imgB.src = 'file:///Users/joseph/.gemini/antigravity/brain/fa4e8167-b646-456d-ae02-627d87076563/viange_pwa_icon_large_text_eeg_1770515198319.png';
+            // 2. Draw enlarged text
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
 
-        let loaded = 0;
-        const onLoaded = () => {
-            loaded++;
-            if (loaded === 2) {
-                ctx.drawImage(imgB, 0, 0);
-                // Use screen to blend the glowing text from A onto B
-                ctx.globalCompositeOperation = 'screen';
-                ctx.drawImage(imgA, 0, 0);
-                document.body.classList.add('ready');
-            }
+            // AI Text
+            ctx.font = '900 420px "Outfit"';
+            ctx.shadowColor = 'rgba(0,0,0,0.3)';
+            ctx.shadowBlur = 40;
+            ctx.fillText('AI', 512, 520);
+
+            // VIANGE Text
+            ctx.shadowBlur = 20;
+            ctx.font = '900 140px "Outfit"';
+            ctx.letterSpacing = '10px';
+            ctx.fillText('VIANGE', 512, 640);
+
+            document.body.classList.add('ready');
         };
-        imgA.onload = onLoaded;
-        imgB.onload = onLoaded;
     </script>
 </body>
 
